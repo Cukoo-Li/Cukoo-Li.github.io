@@ -1,6 +1,6 @@
 baseURL = "https://cukoo-li.github.io.com/"
 languageCode = "en-us"
-title = "Hugo-HT"
+title = "Cukoo' Blog"
 theme = "hugo-ht"
 footnotereturnlinkcontents = "↩"
 enableRobotsTXT = true
@@ -34,11 +34,9 @@ posts = "/posts/:year/:month/:day/:slug/"
     defaultLang = "cn"
     MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs" 
     MathJaxVersion = "2.7.5"
-    favicon = "media/hugo-logo.png"
+    favicon = ""
     # Edit by yourself:
     GithubEdit = "https://github.com/Cukoo-Li/Cukoo-Li.github.io/edit/master/content/"
-    copyright = "&copy;"
-    copyrightYear = "2020-2021"
     # Edit by yourself:
     GithubRepo = "https://github.com/Cukoo-Li/Cukoo-Li.github.io"
     # Edit by yourself:
@@ -46,7 +44,7 @@ posts = "/posts/:year/:month/:day/:slug/"
 
 [params.logo]
   # Change the logo picture as your prefer:
-  url = "media/hugo-logo.png" # you can change it
+  url = "images/Cukoo.jpg" # you can change it
   width = 50.0
   height = 50.0
   alt = "Hugo-ht"
