@@ -12,53 +12,37 @@ cn = "/cn/:year/:month/:day/:slug/"
 en = "/en/:year/:month/:day/:slug/"
 posts = "/posts/:year/:month/:day/:slug/"
 
-[[menu.en]]
-    name = "Home"
+[[menu.main]]
+    name = "主页"
     url = "/"
     weight = 1
-[[menu.en]]
-    name = "About"
-    url = "/en/about/"
-    weight = 2
-[[menu.en]]
-    name = "Posts"
-    url = "/en/posts/"
-    weight = 3
-[[menu.en]]
-    name = "中文"
-    url = "/cn/posts/"
-    weight = 4
-[[menu.cn]]
+[[menu.main]]
     name = "关于"
-    url = "/cn/about/"
-    weight = 1
-[[menu.cn]]
-    name = "日志"
-    url = "/cn/posts/"
+    url = "/about/"
     weight = 2
-[[menu.cn]]
-    name = "English"
-    url = "/"
+[[menu.main]]
+    name = "博客"
+    url = "/posts/" 
     weight = 3
 
 [params]
-    description = "Peronal website of Your Name"
+    description = "Peronal website of Cukoo"
     homeText = "You just need a Hugo blog from scratch"
-    # Please make sure `blogDirNmae` matches the name used in `menu` above:
+    # Please make sure `blogDirName` matches the name used in `menu` above:
     blogDirName = "posts"
-    # singleLang = true
-    defaultLang = "en"
+    singleLang = true
+    defaultLang = "cn"
     MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs" 
     MathJaxVersion = "2.7.5"
     favicon = "media/hugo-logo.png"
     # Edit by yourself:
-    GithubEdit = "https://github.com/USERNAME/REPONAME/edit/master/content/"
+    GithubEdit = "https://github.com/Cukoo-Li/Cukoo-Li.github.io/edit/master/content/"
     copyright = "&copy;"
     copyrightYear = "2020-2021"
     # Edit by yourself:
-    GithubRepo = "https://github.com/USERNAME/REPONAME"
+    GithubRepo = "https://github.com/Cukoo-Li/Cukoo-Li.github.io"
     # Edit by yourself:
-    ContentSource = "https://raw.githubusercontent.com/USERNAME/REPONAME/master/content/" 
+    ContentSource = "https://raw.githubusercontent.com/Cukoo-Li/Cukoo-Li.github.io/master/content/" 
 
 [params.logo]
   # Change the logo picture as your prefer:
@@ -70,8 +54,8 @@ posts = "/posts/:year/:month/:day/:slug/"
 [params.lang]
 
     [params.lang.author]
-      en = "Your Name"
-      cn = "你的名字"
+      en = "Cukoo"
+      cn = "Cukoo"
 
     [params.lang.madeWith]
       en = "Made with"
