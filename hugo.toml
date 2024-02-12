@@ -3,7 +3,6 @@ languageCode = "en-us"
 title = "Cukoo' Blog"
 theme = "hugo-ht"
 footnotereturnlinkcontents = "↩"
-enableRobotsTXT = true
 # enableGitInfo = true
 publishDir = "docs"
 
