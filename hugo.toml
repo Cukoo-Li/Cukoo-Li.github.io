@@ -2,27 +2,25 @@ baseURL = "https://cukoo-li.github.io.com/"
 languageCode = "en-us"
 title = "Cukoo' Blog"
 theme = "hugo-ht"
-footnotereturnlinkcontents = "↩"
-# enableGitInfo = true
 publishDir = "docs"
 
-[permalinks]
-cn = "/cn/:year/:month/:day/:slug/"
-en = "/en/:year/:month/:day/:slug/"
-posts = "/posts/:year/:month/:day/:slug/"
-
-[[menu.main]]
+[menus]
+[[menus.main]]
     name = "主页"
-    url = "/"
-    weight = 1
-[[menu.main]]
+    pageRef = "/"
+    weight = 10
+[[menus.main]]
+    name = "文章"
+    pageRef = "/posts"
+    weight = 20
+[[menus.main]]
+    name = "分类"
+    pageRef = "/categories"
+    weight = 30
+[[menus.main]]
     name = "关于"
-    url = "/about/"
-    weight = 2
-[[menu.main]]
-    name = "博客"
-    url = "/posts/" 
-    weight = 3
+    pageRef = "/about"
+    weight = 40
 
 [params]
     description = "Peronal website of Cukoo"
