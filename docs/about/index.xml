@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>王大锤简历 on Cukoo&#39; Blog</title>
-    <link>https://cukoo-li.github.io.com/about/</link>
-    <description>Recent content in 王大锤简历 on Cukoo&#39; Blog</description>
+    <title>关于我 on Cukoo&#39;s Blog</title>
+    <link>https://cukoo-li.github.io/about/</link>
+    <description>Recent content in 关于我 on Cukoo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <atom:link href="https://cukoo-li.github.io.com/about/index.xml" rel="self" type="application/rss+xml" />
+    <language>zh-CN</language>
+    <copyright>Copyright &amp;copy; 2024 Cukoo</copyright>
+    <atom:link href="https://cukoo-li.github.io/about/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

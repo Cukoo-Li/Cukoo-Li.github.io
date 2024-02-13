@@ -3,8 +3,8 @@
 # https://jpanther.github.io/congo/docs/getting-started/
 
 baseURL = "https://cukoo-li.github.io/"
-languageCode = "en"
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh-CN"
+languageCode = "zh-CN"
 theme = "congo"
 publishDir = "docs"
 
@@ -13,4 +13,4 @@ paginate = 10
 summaryLength = 0
 
 [outputs]
-  home = ["HTML", "RSS", "JSON"]
+home = ["HTML", "RSS", "JSON"]

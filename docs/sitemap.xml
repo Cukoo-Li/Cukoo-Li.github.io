@@ -3,13 +3,25 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
     
-  
-    
       <url>
             <loc>https://cukoo-li.github.io/</loc>
           </url>
     
   
+    
+  
+    
+  
+    
+      <url>
+            <loc>https://cukoo-li.github.io/about/</loc>
+          </url>
+    
+  
+    
+      <url>
+            <loc>https://cukoo-li.github.io/posts/</loc>
+          </url>
     
   
 </urlset>

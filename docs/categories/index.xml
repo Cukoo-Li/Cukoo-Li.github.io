@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on Congo</title>
+    <title>分类 on Cukoo&#39;s Blog</title>
     <link>https://cukoo-li.github.io/categories/</link>
-    <description>Recent content in Categories on Congo</description>
+    <description>Recent content in 分类 on Cukoo&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
+    <language>zh-CN</language>
+    <copyright>Copyright &amp;copy; 2024 Cukoo</copyright>
     <atom:link href="https://cukoo-li.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
