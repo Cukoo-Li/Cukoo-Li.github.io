@@ -13,12 +13,13 @@ mainSections = ["posts"]
 description = "Cukoo的奇幻部落"
 
 [params.author]
+bio = "一个想成为程序员的非科班研究生"
+name = "Cukoo"
+image = "images/Cukoo.jpg"
+# headline = "I'm only human"
+
 links = [
     { github = "https://github.com/Cukoo-Li" },
     { qq = "http://wpa.qq.com/msgrd?v=3&uin=891623879&site=qq:891623879&menu=yes" },
     { steam = "https://steamcommunity.com/profiles/76561199021822259/" },
 ]
-bio = "一个想成为程序员的非科班研究生"
-name = "Cukoo"
-image = "images/Cukoo.jpg"
-# headline = "I'm only human"
