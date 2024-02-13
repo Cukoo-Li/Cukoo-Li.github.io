@@ -10,7 +10,7 @@ copyright = "Copyright &copy; 2024 Cukoo"
 dateFormat = "2006年1月2日"
 
 mainSections = ["posts"]
-description = "Cukoo的奇幻部落"
+description = "Cukoo码字的地方"
 
 [params.author]
 bio = "一个想成为程序员的非科班研究生"
