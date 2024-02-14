@@ -1,4 +1,4 @@
 ---
-title: "写作"
+title: "文章"
 description: "所有文章的索引"
 ---
