@@ -1,0 +1,1417 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html
+  lang="zh-CN"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"
+><head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="rgb(255,255,255)" />
+  
+  <title>gdal_C&#43;&#43;开发环境搭建 &middot; Cukoo&#39;s Blog</title>
+    <meta name="title" content="gdal_C&#43;&#43;开发环境搭建 &middot; Cukoo&#39;s Blog" />
+  
+  
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="/js/appearance.min.022d0ebc3b46a335eb1c7ef79b7f2de143d7cd5156d433638592ef1ce5f8554e.js"
+    integrity="sha256-Ai0OvDtGozXrHH73m38t4UPXzVFW1DNjhZLvHOX4VU4="
+  ></script>
+  
+  
+  
+  
+  
+  
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="/css/main.bundle.min.33a669351b9f936b30a0fc74240c4bd296cb15c8b2b1e40ea9ee7b6658af735b.css"
+    integrity="sha256-M6ZpNRufk2swoPx0JAxL0pbLFciyseQOqe57Zlivc1s="
+  />
+  
+    
+    
+    
+  
+  
+  
+    
+    
+  
+  
+  
+  
+    
+    <script
+      defer
+      type="text/javascript"
+      id="script-bundle"
+      src="/js/main.bundle.min.4057a8d0aa815a6c3934a72a5c61c995d70a38706b6b08a6044ce685842ceced.js"
+      integrity="sha256-QFeo0KqBWmw5NKcqXGHJldcKOHBrawimBEzmhYQs7O0="
+      data-copy="复制"
+      data-copied="已复制"
+    ></script>
+  
+  
+  <meta
+    name="description"
+    content="
+      
+        前言 #在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C&#43;&#43;中，要使用第三方库，首先需要进行以下步骤：
+      
+    "
+  />
+  
+  
+  
+  <link rel="canonical" href="https://cukoo-li.github.io/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" />
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta property="og:title" content="gdal_C&#43;&#43;开发环境搭建" />
+<meta property="og:description" content="前言 #在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C&#43;&#43;中，要使用第三方库，首先需要进行以下步骤：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cukoo-li.github.io/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-02-17T02:17:18+08:00" />
+<meta property="article:modified_time" content="2024-02-17T02:17:18+08:00" />
+
+
+  <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="gdal_C&#43;&#43;开发环境搭建"/>
+<meta name="twitter:description" content="前言 #在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C&#43;&#43;中，要使用第三方库，首先需要进行以下步骤："/>
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "文章",
+    "name": "gdal_C\u002b\u002b开发环境搭建",
+    "headline": "gdal_C\u002b\u002b开发环境搭建",
+    
+    "abstract": "前言 #在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C\u002b\u002b中，要使用第三方库，首先需要进行以下步骤：",
+    "inLanguage": "zh-CN",
+    "url" : "https:\/\/cukoo-li.github.io\/posts\/gdal-c\u002b\u002b%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA\/",
+    "author" : {
+      "@type": "Person",
+      "name": "Cukoo"
+    },
+    "copyrightYear": "2024",
+    "dateCreated": "2024-02-17T02:17:18\u002b08:00",
+    "datePublished": "2024-02-17T02:17:18\u002b08:00",
+    
+    "dateModified": "2024-02-17T02:17:18\u002b08:00",
+    
+    
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "185"
+  }
+  </script>
+
+
+  
+  <meta name="author" content="Cukoo" />
+  
+    
+      <link href="https://github.com/Cukoo-Li" rel="me" />
+    
+      <link href="http://wpa.qq.com/msgrd?v=3&amp;uin=891623879&amp;site=qq:891623879&amp;menu=yes" rel="me" />
+    
+      <link href="https://space.bilibili.com/354615868" rel="me" />
+    
+  
+  
+  
+
+
+
+
+
+
+  
+  
+  
+  
+  
+
+
+  
+  
+</head>
+<body
+    class="m-auto flex h-screen max-w-7xl flex-col bg-neutral px-6 text-lg leading-7 text-neutral-900 sm:px-14 md:px-24 lg:px-32 dark:bg-neutral-800 dark:text-neutral"
+  >
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="-translate-y-8 rounded-b-lg bg-primary-200 px-3 py-1 text-sm focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content"
+        ><span class="pe-2 font-bold text-primary-600 dark:text-primary-400">&darr;</span
+        >跳到主要内容</a
+      >
+    </div>
+    
+    
+      <header class="py-6 font-semibold text-neutral-900 print:hidden sm:py-10 dark:text-neutral">
+  <nav class="flex items-start justify-between sm:items-center">
+    
+    <div class="flex flex-row items-center">
+      
+  <a
+    class="decoration-primary-500 hover:underline hover:decoration-2 hover:underline-offset-2"
+    rel="me"
+    href="/"
+    >Cukoo&rsquo;s Blog</a
+  >
+
+    </div>
+    
+    
+      <ul class="flex list-none flex-col text-end sm:flex-row">
+        
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href="/posts/"
+                  title="文章"
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >✍🏻文章</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href="/categories/"
+                  title="分类"
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >🗃️分类</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href="/about/"
+                  title="关于我"
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >ℹ️关于</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                
+                
+                  <button
+                    id="search-button-1"
+                    title="搜索 (/)"
+                  >
+                    
+                      <span
+                        class="group-dark:hover:text-primary-400 transition-colors group-hover:text-primary-600"
+                      ><span class="icon relative inline-block px-1 align-text-bottom"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span></span><span
+                        class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                        ></span
+                      >
+                    
+                  </button>
+                
+              
+            </li>
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                
+                <button
+                  id="appearance-switcher-1"
+                  type="button"
+                  aria-label="appearance switcher"
+                >
+                  <span
+                    class="group-dark:hover:text-primary-400 inline transition-colors group-hover:text-primary-600 dark:hidden"
+                    title="切换为深色模式"
+                  >
+                    <span class="icon relative inline-block px-1 align-text-bottom"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M32 256c0-123.8 100.3-224 223.8-224c11.36 0 29.7 1.668 40.9 3.746c9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3c9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480C132.1 480 32 379.6 32 256z"/></svg>
+</span><span
+                        class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                        ></span
+                      >
+                    
+                  </span>
+                  <span
+                    class="group-dark:hover:text-primary-400 hidden transition-colors group-hover:text-primary-600 dark:inline"
+                    title="切换为浅色模式"
+                  >
+                    
+                      <span class="icon relative inline-block px-1 align-text-bottom"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M256 159.1c-53.02 0-95.1 42.98-95.1 95.1S202.1 351.1 256 351.1s95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347L446.1 255.1l63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7l-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89L164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6L12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256l-63.15 91.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7l19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109l109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69 0-127.1-57.31-127.1-127.1c0-70.69 57.31-127.1 127.1-127.1s127.1 57.3 127.1 127.1C383.1 326.7 326.7 383.1 256 383.1z"/></svg>
+</span>
+                    
+                    
+                      <span
+                        class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                        ></span
+                      >
+                    
+                  </span>
+                </button>
+              
+            </li>
+          
+          
+        
+      </ul>
+    
+  </nav>
+</header>
+
+    
+    <div class="relative flex grow flex-col">
+      <main id="main-content" class="grow">
+        
+  <article>
+    <header class="max-w-prose">
+      
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        gdal_C++开发环境搭建
+      </h1>
+      
+        <div class="mb-12 mt-8 text-base text-neutral-500 print:hidden dark:text-neutral-400">
+          
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2024-02-17 02:17:18 &#43;0800 CST">2024年2月17日</time><span class="px-2 text-primary-500">&middot;</span><span title="预计阅读">1 分钟</span>
+    
+
+    
+    
+  </div>
+
+  
+  
+
+
+        </div>
+      
+      
+    </header>
+    <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
+      
+      <div class="min-h-0 min-w-0 max-w-prose grow">
+        <h2 id="前言" class="relative group">前言 <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#%e5%89%8d%e8%a8%80" aria-label="锚点">#</a></span></h2><p>在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中，要使用第三方库，首先需要进行以下步骤：</p>
+<ol>
+<li>获取库文件和头文件</li>
+<li>告知编译器头文件的所在目录</li>
+<li>告知编译器库文件的所在目录</li>
+<li>告知编译器要链接的库文件</li>
+</ol>
+<p>对于某些第三方开源库，官方并没有提供编译好的库文件，此时就需要自己动手编译，得到适合于自己平台下的库文件。</p>
+<p>出于毕业要求的需要，笔者前段时间写了一个软著，其中某些功能的实现需要用到gdal。而gdal就属于上述所说的“需要自己动手编译”的开源库，当然你也可以去寻找别人已经编译好的库文件。</p>
+<p>搭建使用第三方库的C++开发环境的核心原理是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。以下将对“Windows下的gdal开发环境搭建过程”做一个记录，以供自己学习之用，也希望能够帮到有需要的人。</p>
+<h2 id="基于vcpkg的gdal库编译" class="relative group">基于vcpkg的gdal库编译 <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#%e5%9f%ba%e4%ba%8evcpkg%e7%9a%84gdal%e5%ba%93%e7%bc%96%e8%af%91" aria-label="锚点">#</a></span></h2><p>
+<a href="https://learn.microsoft.com/zh-cn/vcpkg/get_started/overview" target="_blank" rel="noreferrer">vcpkg</a>是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。</p>
+<ul>
+<li>
+<p>下载vcpkg</p>
+<p>使用git-bash中执行以下命令，以下载vcpkg。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git clone https://github.com/microsoft/vcpkg.git
+</span></span></code></pre></div><p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_660x0_resize_q75_h2_box_3.webp 660w
+            
+              ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_1024x0_resize_q75_h2_box_3.webp 1024w
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_1306x730_resize_q75_h2_box_3.webp 1306w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1306"
+        height="730"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216160315289"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791_hu427f45d2bb77ad9d2edd0737595a96a1_53377_1024x0_resize_box_3.png 1024w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160315289-17081075063791.png 1306w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<p>如果你没有git，打开上述命令中的网址，点击&quot;Code&quot;-&ldquo;Download ZIP&rdquo;，下载后解压即可。</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_660x0_resize_q75_h2_box_3.webp 660w
+            
+              ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_1024x0_resize_q75_h2_box_3.webp 1024w
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_1137x624_resize_q75_h2_box_3.webp 1137w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1137"
+        height="624"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216160534593"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792_hu16c3a0518e88393dafddd47c8c64beba_74301_1024x0_resize_box_3.png 1024w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216160534593-17081075063792.png 1137w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+<li>
+<p>使用vcpkg进行gdal库编译</p>
+<p>在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">.<span class="se">\v</span>cpkg<span class="se">\b</span>ootstrap-vcpkg.bat
+</span></span><span class="line"><span class="cl">.<span class="se">\v</span>cpkg<span class="se">\v</span>cpkg install gdal:x64-windows
+</span></span></code></pre></div><p>接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在笔者的电脑中，耗时42分钟。</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_660x0_resize_q75_h2_box_3.webp 660w
+            
+              ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_1024x0_resize_q75_h2_box_3.webp 1024w
+            
+            
+              ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_1320x0_resize_q75_h2_box_3.webp 1320w
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1486"
+        height="792"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216165859407"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_1024x0_resize_box_3.png 1024w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216165859407-17081075063793_hua707a78868f01a3e6fee7964bd53fba2_128094_1320x0_resize_box_3.png 1320w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+<li>
+<p>查看库文件和头文件</p>
+<p>进入<code>vcpkg/installed/x64-windows</code></p>
+<ul>
+<li>bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib)</li>
+<li>debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib)</li>
+<li>include文件夹中存放着头文件</li>
+</ul>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            
+              srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170134259-17081075063794_hu9109b6e0b608fd5f8d00ced05bb85d73_24808_654x409_resize_q75_h2_box_3.webp"
+            
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="654"
+        height="409"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216170134259"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170134259-17081075063794.png"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+</ul>
+<p>以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考
+<a href="https://github.com/microsoft/vcpkg" target="_blank" rel="noreferrer">vcpkg的GitHub仓库</a>。</p>
+<h2 id="visual-studio项目属性设置" class="relative group">Visual Studio项目属性设置 <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#visual-studio%e9%a1%b9%e7%9b%ae%e5%b1%9e%e6%80%a7%e8%ae%be%e7%bd%ae" aria-label="锚点">#</a></span></h2><p>打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795_hu9553a304ce4d1f77d5837d290542587e_46840_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795_hu9553a304ce4d1f77d5837d290542587e_46840_660x0_resize_q75_h2_box_3.webp 660w
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795_hu9553a304ce4d1f77d5837d290542587e_46840_984x684_resize_q75_h2_box_3.webp 984w
+              
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795_hu9553a304ce4d1f77d5837d290542587e_46840_984x684_resize_q75_h2_box_3.webp 984w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="984"
+        height="684"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216164402466"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795_hu9553a304ce4d1f77d5837d290542587e_46840_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795_hu9553a304ce4d1f77d5837d290542587e_46840_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795_hu9553a304ce4d1f77d5837d290542587e_46840_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795.png 984w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216164402466-17081075063795.png 984w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<p>在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。</p>
+<ol>
+<li>
+<p>在解决方案目录下新建名为&quot;gdal&quot;的文件夹</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806_hu0f35889ba9d3094d647b59562c5d1ea9_20317_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806_hu0f35889ba9d3094d647b59562c5d1ea9_20317_660x0_resize_q75_h2_box_3.webp 660w
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806_hu0f35889ba9d3094d647b59562c5d1ea9_20317_772x330_resize_q75_h2_box_3.webp 772w
+              
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806_hu0f35889ba9d3094d647b59562c5d1ea9_20317_772x330_resize_q75_h2_box_3.webp 772w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="772"
+        height="330"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216170951117"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806_hu0f35889ba9d3094d647b59562c5d1ea9_20317_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806_hu0f35889ba9d3094d647b59562c5d1ea9_20317_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806_hu0f35889ba9d3094d647b59562c5d1ea9_20317_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806.png 772w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216170951117-17081075063806.png 772w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+<li>
+<p>将<code>vcpkg/installed/x64-windows</code>下的&quot;bin&quot;、&ldquo;debug&rdquo;、&ldquo;include&rdquo;、&ldquo;lib&quot;文件夹拷贝至刚刚新建的&quot;gdal&quot;文件夹中</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807_hu645c57361e0b67119f67429c88831178_18793_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807_hu645c57361e0b67119f67429c88831178_18793_660x0_resize_q75_h2_box_3.webp 660w
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807_hu645c57361e0b67119f67429c88831178_18793_765x329_resize_q75_h2_box_3.webp 765w
+              
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807_hu645c57361e0b67119f67429c88831178_18793_765x329_resize_q75_h2_box_3.webp 765w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="765"
+        height="329"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216171248383"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807_hu645c57361e0b67119f67429c88831178_18793_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807_hu645c57361e0b67119f67429c88831178_18793_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807_hu645c57361e0b67119f67429c88831178_18793_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807.png 765w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171248383-17081075063807.png 765w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+</ol>
+<p>接下来我们正式开始进行项目属性设置（以Debug配置为例）</p>
+<ul>
+<li>
+<p>设置附加包含目录 - 告知编译器头文件的所在目录</p>
+<p>在&quot;C/C++&rdquo;-&ldquo;常规&rdquo;-&ldquo;附加包含目录&quot;中填写<code>$(SolutionDir)gdal\include</code></p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808_hu988afa935c8b307b13215ed6d82999d6_96764_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808_hu988afa935c8b307b13215ed6d82999d6_96764_660x0_resize_q75_h2_box_3.webp 660w
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808_hu988afa935c8b307b13215ed6d82999d6_96764_984x684_resize_q75_h2_box_3.webp 984w
+              
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808_hu988afa935c8b307b13215ed6d82999d6_96764_984x684_resize_q75_h2_box_3.webp 984w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="984"
+        height="684"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216171714570"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808_hu988afa935c8b307b13215ed6d82999d6_96764_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808_hu988afa935c8b307b13215ed6d82999d6_96764_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808_hu988afa935c8b307b13215ed6d82999d6_96764_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808.png 984w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216171714570-17081075063808.png 984w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+<li>
+<p>设置附加库目录 - 告知编译器.lib库文件的所在目录</p>
+<p>在&quot;链接器&rdquo;-&ldquo;常规&rdquo;-&ldquo;附加库目录&quot;中填写<code>$(SolutionDir)gdal\debug\lib</code></p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809_hu2303228c07e2a3896925f2cd0b48f95c_89038_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809_hu2303228c07e2a3896925f2cd0b48f95c_89038_660x0_resize_q75_h2_box_3.webp 660w
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809_hu2303228c07e2a3896925f2cd0b48f95c_89038_984x684_resize_q75_h2_box_3.webp 984w
+              
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809_hu2303228c07e2a3896925f2cd0b48f95c_89038_984x684_resize_q75_h2_box_3.webp 984w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="984"
+        height="684"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216172545095"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809_hu2303228c07e2a3896925f2cd0b48f95c_89038_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809_hu2303228c07e2a3896925f2cd0b48f95c_89038_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809_hu2303228c07e2a3896925f2cd0b48f95c_89038_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809.png 984w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172545095-17081075063809.png 984w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+<li>
+<p>设置环境 - 告知编译器.dll库文件的所在目录</p>
+<p>在&quot;调试&rdquo;-&ldquo;环境&quot;中填写<code>Path = $(SolutionDir)gdal\debug\bin</code></p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010_hud8b2d0bd4033a4008374c669dc19ef29_61340_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010_hud8b2d0bd4033a4008374c669dc19ef29_61340_660x0_resize_q75_h2_box_3.webp 660w
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010_hud8b2d0bd4033a4008374c669dc19ef29_61340_984x684_resize_q75_h2_box_3.webp 984w
+              
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010_hud8b2d0bd4033a4008374c669dc19ef29_61340_984x684_resize_q75_h2_box_3.webp 984w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="984"
+        height="684"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216172928352"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010_hud8b2d0bd4033a4008374c669dc19ef29_61340_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010_hud8b2d0bd4033a4008374c669dc19ef29_61340_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010_hud8b2d0bd4033a4008374c669dc19ef29_61340_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010.png 984w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172928352-170810750638010.png 984w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+<li>
+<p>设置附加依赖项 - 告知编译器要链接的库文件</p>
+<p>在&quot;链接器&rdquo;-&ldquo;输入&rdquo;-&ldquo;附加依赖项&quot;中填写<code>gdald.lib</code></p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011_hue3191d46ac521da9886b21b9916ada81_72958_330x0_resize_q75_h2_box_3.webp 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011_hue3191d46ac521da9886b21b9916ada81_72958_660x0_resize_q75_h2_box_3.webp 660w
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011_hue3191d46ac521da9886b21b9916ada81_72958_984x684_resize_q75_h2_box_3.webp 984w
+              
+            
+            
+              
+                ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011_hue3191d46ac521da9886b21b9916ada81_72958_984x684_resize_q75_h2_box_3.webp 984w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="984"
+        height="684"
+        class="mx-auto my-0 rounded-md"
+        alt="image-20240216172836012"
+        loading="lazy" decoding="async"
+        
+          src="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011_hue3191d46ac521da9886b21b9916ada81_72958_660x0_resize_box_3.png"
+          srcset="/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011_hue3191d46ac521da9886b21b9916ada81_72958_330x0_resize_box_3.png 330w,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011_hue3191d46ac521da9886b21b9916ada81_72958_660x0_resize_box_3.png 660w
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011.png 984w
+          
+          
+            ,/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/images/image-20240216172836012-170810750638011.png 984w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</li>
+</ul>
+<p>最后点击确定，项目属性设置完毕。</p>
+<h2 id="测试" class="relative group">测试 <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#%e6%b5%8b%e8%af%95" aria-label="锚点">#</a></span></h2><p>在main.cpp文件中输入如下代码，注意要将第7行的文件路径改成你自己的，第13行的函数实参也要做相应的修改。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;ogrsf_frmts.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GDALAllRegister</span><span class="p">();</span>		<span class="c1">// 自动注册所有驱动，只能读不能写
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">GDALDataset</span><span class="o">*</span> <span class="n">poDS</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">GDALDataset</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">GDALOpenEx</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;./data/point.shp&#34;</span><span class="p">,</span> <span class="n">GDAL_OF_VECTOR</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">));</span>	<span class="c1">// 创建Dataset
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">poDS</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;open failed.&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">OGRLayer</span><span class="o">*</span> <span class="n">poLayer</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayerByName</span><span class="p">(</span><span class="s">&#34;point&#34;</span><span class="p">);</span>		<span class="c1">// 获取Layer，shapefile格式的LayerName就是文件名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">OGRFeatureDefn</span><span class="o">*</span> <span class="n">poFDefn</span> <span class="o">=</span> <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">GetLayerDefn</span><span class="p">();</span>		<span class="c1">// 获取Layer的定义（包含Geometry和Field的定义）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">();</span>		<span class="c1">// 重置游标
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">OGRFeature</span><span class="o">*</span> <span class="n">poFeature</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">((</span><span class="n">poFeature</span> <span class="o">=</span> <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">())</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>		<span class="c1">// 输出Layer中所有Feature的字段值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">iField</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iField</span> <span class="o">&lt;</span> <span class="n">poFDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">();</span> <span class="o">++</span><span class="n">iField</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">OGRFieldDefn</span><span class="o">*</span> <span class="n">poFieldDefn</span> <span class="o">=</span> <span class="n">poFDefn</span><span class="o">-&gt;</span><span class="n">GetFieldDefn</span><span class="p">(</span><span class="n">iField</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">switch</span> <span class="p">(</span><span class="n">poFieldDefn</span><span class="o">-&gt;</span><span class="n">GetType</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTInteger</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%d,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTInteger64</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="n">CPL_FRMT_GIB</span> <span class="s">&#34;,&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                           <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger64</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTReal</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%.3f,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsDouble</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTString</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">OGRFeature</span><span class="o">::</span><span class="n">DestroyFeature</span><span class="p">(</span><span class="n">poFeature</span><span class="p">);</span>		<span class="c1">// GetNextFeature()返回的似乎是一个对象的拷贝，因此需要自行销毁
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>点击“开始调试”，不出意外的话，程序可以正常运行。</p>
+<p>但是，控制台首行会提示&quot;Cannot find proj.db&rdquo;，所谓的&quot;proj.db&quot;实际存放在<code>vcpkg\installed\x64-windows\share\proj</code>中，我们可以使用以下两种方式让程序找到它。</p>
+<ol>
+<li>利用名为&quot;PROJ_LIB&quot;的环境变量，指明&quot;proj.db&quot;所在目录</li>
+<li>将&quot;proj.db&quot;拷贝到项目目录以及可执行文件所在目录</li>
+</ol>
+
+      </div>
+    </section>
+    <footer class="max-w-prose pt-8 print:hidden">
+      
+  <div class="flex">
+    
+    
+    
+      
+      
+        
+        
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="!mb-0 !mt-0 me-4 w-24 h-auto rounded-full"
+      
+    >
+      
+      
+      
+      
+      <img
+        width="1181"
+        height="1181"
+        class="!mb-0 !mt-0 me-4 w-24 h-auto rounded-full"
+        alt="Cukoo"
+        loading="lazy" decoding="async"
+        
+          src="/images/Cukoo_hu1a0fb2af99b518296f1369909051b9a4_543042_660x0_resize_q75_box.jpg"
+          srcset="/images/Cukoo_hu1a0fb2af99b518296f1369909051b9a4_543042_330x0_resize_q75_box.jpg 330w,/images/Cukoo_hu1a0fb2af99b518296f1369909051b9a4_543042_660x0_resize_q75_box.jpg 660w
+          
+            ,/images/Cukoo_hu1a0fb2af99b518296f1369909051b9a4_543042_1024x0_resize_q75_box.jpg 1024w
+          
+          
+            ,/images/Cukoo.jpg 1181w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+      
+    
+    <div class="place-self-center">
+      
+        <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
+          作者
+        </div>
+        <div class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
+          Cukoo
+        </div>
+      
+      
+        <div class="text-sm text-neutral-700 dark:text-neutral-400">一个想成为程序员的非科班研究生</div>
+      
+      <div class="text-2xl sm:text-lg">
+  <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500">
+    
+      
+        <a
+          class="px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
+          style="will-change:transform;"
+          href="https://github.com/Cukoo-Li"
+          target="_blank"
+          aria-label="Github"
+          rel="me noopener noreferrer"
+          ><span class="icon relative inline-block px-1 align-text-bottom"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+</span></a
+        >
+      
+    
+      
+        <a
+          class="px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
+          style="will-change:transform;"
+          href="http://wpa.qq.com/msgrd?v=3&amp;uin=891623879&amp;site=qq:891623879&amp;menu=yes"
+          target="_blank"
+          aria-label="Qq"
+          rel="me noopener noreferrer"
+          ><span class="icon relative inline-block px-1 align-text-bottom"><?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1707836506965" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8404" width="280" height="280" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M936.194300839506 691.6934192494618c-5.891587367822223-94.26540047423211-70.69904970840491-170.8560375504593-106.04857520987652-212.09715041975304 5.891587367822223-11.783174735644446 17.674762103466666-79.53643140740742-29.457938133649378-126.66913164452346V349.981342854005c0-182.63921228610366-129.61492468116543-315.1999312984493-294.57937486380246-315.1999312984493s-294.57937615834066 132.5607190123457-294.57937615834066 315.1999312984493v2.9457943311802466c-47.132700237116055 47.132700237116055-35.349525501471604 114.885956908879-29.45793683911111 126.66913164452346-35.349525501471604 41.24111286929382-100.15698784205432 117.83174994552098-106.04857520987652 212.09715041975304 0 23.56634947128889 2.9457943311802466 58.91587497276049 14.728969066824689 76.59063707622718 14.728969066824689 20.62055643464691 55.97008193611851-2.9457943311802466 82.48222444404936-64.80746234058272 8.837381699002469 29.457938133649378 26.51214380246913 73.64484403958517 67.75325667176295 126.66913164452346-70.69904970840491 14.728969066824689-88.37381310640988 85.42801877522965-64.80746234058272 123.72333731334321 17.674762103466666 26.51214380246913 53.02428760493826 47.132700237116055 120.77754298216297 47.132700237116055 114.885956908879 0 167.9102445138173-32.40373117029136 191.4765952796444-53.02428760493826 5.891587367822223-5.891587367822223 11.783174735644446-5.891587367822223 20.620555140108642-5.891587367822223 8.837381699002469 0 14.728969066824689 2.9457943311802466 20.62055643464691 5.891587367822223 23.56634947128889 20.62055643464691 73.64484403958517 53.02428760493826 191.4765939851062 53.02428760493826 64.80746234058272 0 103.10278087869627-20.62055643464691 120.77754427670124-47.132700237116055 23.56634947128889-38.29531853811359 2.9457943311802466-106.04857520987652-64.80746234058272-123.72333731334321 41.24111286929382-55.97008193611851 58.91587497276049-100.15698784205432 67.75325667176295-126.66913164452346 29.457938133649378 61.86166930394074 67.75325667176295 85.42801877522965 82.48222444404936 64.80746234058272 5.891587367822223-17.674762103466666 11.783174735644446-53.02428760493826 8.837381699002469-76.59063707622718z m0 0" fill="#A1A1AA" p-id="8405"></path></svg></span></a
+        >
+      
+    
+      
+        <a
+          class="px-1 transition-transform hover:scale-125 hover:text-primary-700 dark:hover:text-primary-400"
+          style="will-change:transform;"
+          href="https://space.bilibili.com/354615868"
+          target="_blank"
+          aria-label="Bilibili"
+          rel="me noopener noreferrer"
+          ><span class="icon relative inline-block px-1 align-text-bottom"><?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1707836216834" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3614" width="264" height="264" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M769.856 348.928H261.248a27.84 27.84 0 0 0-28.48 27.584v337.152a27.712 27.712 0 0 0 28.48 27.456h508.608a26.496 26.496 0 0 0 27.072-27.456V376.512a26.688 26.688 0 0 0-27.072-27.584zM295.872 473.536l143.36-27.456 10.816 53.76-141.888 27.456zM516.8 637.44c-44.032 48-90.24-15.168-90.24-15.168l23.488-15.168s31.424 56.704 66.432-18.432c33.6 72.96 70.784 19.2 70.784 19.2l21.312 13.696s-39.68 63.872-91.712 15.872z m212.672-110.144L587.2 499.84l11.2-53.824 142.976 27.456z" fill="#A1A1AA" p-id="3615"></path><path d="M512 0a512 512 0 1 0 512 512 512 512 0 0 0-512-512z m269.632 809.408a462.4 462.4 0 0 0-47.872 0s-2.624 41.088-37.696 41.792a39.552 39.552 0 0 1-41.792-39.552c-21.44 0-279.552 1.152-279.552 1.152s-4.544 38.08-39.552 38.08a39.68 39.68 0 0 1-39.552-38.08c-22.976 0-53.888-0.768-53.888-0.768a123.52 123.52 0 0 1-87.808-117.184c1.152-100.992 0-300.8 0-300.8a117.376 117.376 0 0 1 85.504-119.808 5388.8 5388.8 0 0 1 161.984-1.536l-65.92-64s-10.176-12.8 7.168-27.136 18.432-8.512 24.512-4.352 98.304 95.104 98.304 95.104h-12.416c35.392 0 71.936 0.576 107.008 0.576 13.568-13.568 90.816-89.216 96-92.928s7.168-10.112 24.512 4.16 7.168 27.136 7.168 27.136l-64.448 62.144c88.512 0.768 156.736 1.152 156.736 1.152a120.896 120.896 0 0 1 89.6 119.424c-1.152 100.224 0.384 301.76 0.384 301.76s-4.864 97.92-88.512 113.408z" fill="#A1A1AA" p-id="3616"></path></svg></span></a
+        >
+      
+    
+  </div>
+
+</div>
+    </div>
+  </div>
+
+
+      
+
+      
+  
+
+
+      
+    </footer>
+  </article>
+
+        
+      </main><footer class="py-10 print:hidden">
+  
+  
+  <div class="flex items-center justify-between">
+    <div>
+      
+      
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            Copyright © 2024 Cukoo
+        </p>
+      
+      
+      
+        <p class="text-xs text-neutral-500 dark:text-neutral-400">
+          
+          
+          由 <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+            href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500" href="https://github.com/jpanther/congo" target="_blank" rel="noopener noreferrer">Congo</a> 强力驱动
+        </p>
+      
+    </div>
+    <div class="flex flex-row items-center">
+      
+      
+      
+      
+    </div>
+  </div>
+  
+  
+</footer>
+<div
+  id="search-wrapper"
+  class="invisible fixed inset-0 z-50 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm sm:p-6 md:p-[10vh] lg:p-[12vh] dark:bg-neutral-900/50"
+  data-url="https://cukoo-li.github.io/"
+>
+  <div
+    id="search-modal"
+    class="top-20 mx-auto flex min-h-0 w-full max-w-3xl flex-col rounded-md border border-neutral-200 bg-neutral shadow-lg dark:border-neutral-700 dark:bg-neutral-800"
+  >
+    <header class="relative z-10 flex flex-none items-center justify-between px-2">
+      <form class="flex min-w-0 flex-auto items-center">
+        <div class="flex h-8 w-8 items-center justify-center text-neutral-400">
+          <span class="icon relative inline-block px-1 align-text-bottom"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
+</span>
+        </div>
+        <input
+          type="search"
+          id="search-query"
+          class="mx-1 flex h-12 flex-auto appearance-none bg-transparent focus:outline-dotted focus:outline-2 focus:outline-transparent"
+          placeholder="搜索"
+          tabindex="0"
+        />
+      </form>
+      <button
+        id="close-search-button"
+        class="flex h-8 w-8 items-center justify-center text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400"
+        title="关闭 (Esc)"
+      >
+        <span class="icon relative inline-block px-1 align-text-bottom"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path fill="currentColor" d="M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"/></svg>
+</span>
+      </button>
+    </header>
+    <section class="flex-auto overflow-auto px-2">
+      <ul id="search-results">
+        
+      </ul>
+    </section>
+  </div>
+</div>
+
+    </div>
+  </body>
+</html>
