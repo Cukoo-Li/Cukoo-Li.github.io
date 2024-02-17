@@ -6,13 +6,7 @@
         {{- if not (urls.Parse .imageUrl).IsAbs }}
         {{- $img = resources.Get .imageUrl }}
         {{- end }}
-
-        {{ if $img }}
-        {{ $imgClass := "!mb-0 !mt-0 me-4 w-24 h-auto rounded-full" }}
-        {{ partial "picture.html" (dict "img" $img "alt" $altText "class" $imgClass "lazy" $lazy ) }}
-        {{ end }}
-        {{ end }}
-        <!-- {{- if $img }}
+        {{- if $img }}
         {{- $processableFormats := (slice "jpg" "jpeg" "png" "tif" "bmp" "gif") -}}
         {{- if hugo.IsExtended -}}
         {{- $processableFormats = $processableFormats | append "webp" -}}
@@ -28,7 +22,7 @@
         {{ else }}
         {{- $img = $img.Resize "150x150" }}
         {{- end }}
-        {{- end }} -->
+        {{- end }}
         <img draggable="false" src="{{ $img.Permalink }}" alt="{{ .imageTitle | default " profile image" }}"
             title="{{ .imageTitle }}" height="{{ .imageHeight | default 150 }}"
             width="{{ .imageWidth | default 150 }}" />
