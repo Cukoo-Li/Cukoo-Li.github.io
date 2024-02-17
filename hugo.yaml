@@ -6,6 +6,8 @@ paginate: 5
 theme: PaperMod
 publishDir: docs
 
+summaryLength: 0
+
 enableInlineShortcodes: true
 enableRobotsTXT: true
 buildDrafts: false
