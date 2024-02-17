@@ -44,6 +44,9 @@ languages:
         - name: ℹ️关于
           url: about
           weight: 30
+        - name: 🔍搜索
+          url: search
+          weight: 40
     # custom params for each language should be under [langcode].parms - hugo v0.120.0
     params:
       dateFormat: 2006年1月2日
