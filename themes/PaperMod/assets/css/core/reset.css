@@ -1,9 +1,9 @@
-/* @font-face {
+@font-face {
     font-family: "JetBrains Mono NL";
     src: url("/fonts/JetBrainsMonoNL-Regular.ttf");
     font-family: "HarmonyOS Sans SC";
     src: url("/fonts/HarmonyOS_Sans_SC_Regular.ttf");
-} */
+}
 
 
 *,
@@ -32,16 +32,16 @@ h6 {
 }
 
 body {
-    /* font-family: "Jetbrains Mono NL", "HarmonyOS Sans SC"; */
+    font-family: "Jetbrains Mono NL", "HarmonyOS Sans SC";
     font-size: 18px;
     line-height: 1.6;
     word-break: break-word;
     background: var(--theme);
 }
 
-/* code {
+code {
     font-family: "Jetbrains Mono NL", "HarmonyOS Sans SC";
-} */
+}
 
 article,
 aside,
