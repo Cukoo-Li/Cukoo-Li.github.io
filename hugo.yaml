@@ -6,8 +6,6 @@ paginate: 5
 theme: PaperMod
 publishDir: docs
 
-summaryLength: 0
-
 enableInlineShortcodes: true
 enableRobotsTXT: true
 buildDrafts: false
@@ -76,6 +74,9 @@ params:
   description: "Theme PaperMod - https://github.com/adityatelange/hugo-PaperMod"
   author: Cukoo
   # author: ["Me", "You"] # multiple authors
+
+  enableImageLazyLoading: true
+  enableImageWebp: true
 
   defaultTheme: auto
   # disableThemeToggle: true
