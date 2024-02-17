@@ -75,9 +75,6 @@ params:
   author: Cukoo
   # author: ["Me", "You"] # multiple authors
 
-  enableImageLazyLoading: true
-  enableImageWebp: true
-
   defaultTheme: auto
   # disableThemeToggle: true
   ShowShareButtons: false
