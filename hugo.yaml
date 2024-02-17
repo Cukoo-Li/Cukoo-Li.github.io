@@ -18,6 +18,10 @@ pygmentsUseClasses: true
 mainsections: ["posts", "papermod"]
 # googleAnalytics: UA-123-45
 
+imaging:
+  # Default JPEG quality setting. Default is 75.
+  quality: 100
+
 minify:
   disableXML: true
   # minifyOutput: true
