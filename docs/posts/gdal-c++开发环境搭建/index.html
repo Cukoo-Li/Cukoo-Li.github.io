@@ -1,53 +1,488 @@
-<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>gdal C++开发环境搭建 | Cukoo's Blog</title>
-<meta name=keywords content><meta name=description content="aaa"><meta name=author content="Cukoo"><link rel=canonical href=https://cukoo-li.github.io/posts/gdal-c++%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/><link crossorigin=anonymous href=/assets/css/stylesheet.9687911c0cc5c59b6889747e8bd3cb728b851079086956d1ccbc15a3dbb14b64.css integrity="sha256-loeRHAzFxZtoiXR+i9PLcouFEHkIaVbRzLwVo9uxS2Q=" rel="preload stylesheet" as=style><link rel=icon href=https://cukoo-li.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://cukoo-li.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://cukoo-li.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://cukoo-li.github.io/apple-touch-icon.png><link rel=mask-icon href=https://cukoo-li.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><meta property="og:title" content="gdal C++开发环境搭建"><meta property="og:description" content="aaa"><meta property="og:type" content="article"><meta property="og:url" content="https://cukoo-li.github.io/posts/gdal-c++%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"><meta property="og:image" content="https://cukoo-li.github.io/images/papermod-cover.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-02-17T02:17:18+08:00"><meta property="article:modified_time" content="2024-02-17T02:17:18+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://cukoo-li.github.io/images/papermod-cover.png"><meta name=twitter:title content="gdal C++开发环境搭建"><meta name=twitter:description content="aaa"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"文章","item":"https://cukoo-li.github.io/posts/"},{"@type":"ListItem","position":2,"name":"gdal C++开发环境搭建","item":"https://cukoo-li.github.io/posts/gdal-c++%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"gdal C++开发环境搭建","name":"gdal C\u002b\u002b开发环境搭建","description":"aaa","keywords":[],"articleBody":"前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中，要使用第三方库，首先需要进行以下步骤：\n获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 对于某些第三方开源库，官方并没有提供编译好的库文件，此时就需要自己动手编译，得到适合于自己平台下的库文件。\n出于毕业要求的需要，笔者前段时间写了一个软著，其中某些功能的实现需要用到gdal。而gdal就属于上述所说的“需要自己动手编译”的开源库，当然你也可以去寻找别人已经编译好的库文件。\n搭建使用第三方库的C++开发环境的核心原理是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。以下将对“Windows下的gdal开发环境搭建过程”做一个记录，以供自己学习之用，也希望能够帮到有需要的人。\n基于vcpkg的gdal库编译 vcpkg是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。\n下载vcpkg\n使用git-bash中执行以下命令，以下载vcpkg。\ngit clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上述命令中的网址，点击\"Code\"-“Download ZIP”，下载后解压即可。\n使用vcpkg进行gdal库编译\n在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。\n.\\vcpkg\\bootstrap-vcpkg.bat .\\vcpkg\\vcpkg install gdal:x64-windows 接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在笔者的电脑中，耗时42分钟。\n查看库文件和头文件\n进入vcpkg/installed/x64-windows\nbin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库。\nVisual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。\n在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。\n在解决方案目录下新建名为\"gdal\"的文件夹\n将vcpkg/installed/x64-windows下的\"bin\"、“debug”、“include”、“lib\"文件夹拷贝至刚刚新建的\"gdal\"文件夹中\n接下来我们正式开始进行项目属性设置（以Debug配置为例）\n设置附加包含目录 - 告知编译器头文件的所在目录\n在\"C/C++”-“常规”-“附加包含目录\"中填写$(SolutionDir)gdal\\include\n设置附加库目录 - 告知编译器.lib库文件的所在目录\n在\"链接器”-“常规”-“附加库目录\"中填写$(SolutionDir)gdal\\debug\\lib\n设置环境 - 告知编译器.dll库文件的所在目录\n在\"调试”-“环境\"中填写Path = $(SolutionDir)gdal\\debug\\bin\n设置附加依赖项 - 告知编译器要链接的库文件\n在\"链接器”-“输入”-“附加依赖项\"中填写gdald.lib\n最后点击确定，项目属性设置完毕。\n测试 在main.cpp文件中输入如下代码，注意要将第7行的文件路径改成你自己的，第13行的函数实参也要做相应的修改。\n#include \"ogrsf_frmts.h\" #include using namespace std; int main() { GDALAllRegister();\t// 自动注册所有驱动，只能读不能写 GDALDataset* poDS = static_cast\u003cGDALDataset*\u003e(GDALOpenEx( \"./data/point.shp\", GDAL_OF_VECTOR, nullptr, nullptr, nullptr));\t// 创建Dataset if (poDS == nullptr) { cout \u003c\u003c \"open failed.\" \u003c\u003c endl; exit(1); } OGRLayer* poLayer = poDS-\u003eGetLayerByName(\"point\");\t// 获取Layer，shapefile格式的LayerName就是文件名 OGRFeatureDefn* poFDefn = poLayer-\u003eGetLayerDefn();\t// 获取Layer的定义（包含Geometry和Field的定义） poLayer-\u003eResetReading();\t// 重置游标 OGRFeature* poFeature; while ((poFeature = poLayer-\u003eGetNextFeature()) != nullptr) {\t// 输出Layer中所有Feature的字段值 for (int iField = 0; iField \u003c poFDefn-\u003eGetFieldCount(); ++iField) { OGRFieldDefn* poFieldDefn = poFDefn-\u003eGetFieldDefn(iField); switch (poFieldDefn-\u003eGetType()) { case OFTInteger: printf(\"%d,\", poFeature-\u003eGetFieldAsInteger(iField)); break; case OFTInteger64: printf(CPL_FRMT_GIB \",\", poFeature-\u003eGetFieldAsInteger64(iField)); break; case OFTReal: printf(\"%.3f,\", poFeature-\u003eGetFieldAsDouble(iField)); break; case OFTString: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; default: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; } } cout \u003c\u003c endl; OGRFeature::DestroyFeature(poFeature);\t// GetNextFeature()返回的似乎是一个对象的拷贝，因此需要自行销毁 } return 0; } 点击“开始调试”，不出意外的话，程序可以正常运行。\n但是，控制台首行会提示\"Cannot find proj.db”，所谓的\"proj.db\"实际存放在vcpkg\\installed\\x64-windows\\share\\proj中，我们可以使用以下两种方式让程序找到它。\n利用名为\"PROJ_LIB\"的环境变量，指明\"proj.db\"所在目录 将\"proj.db\"拷贝到项目目录以及可执行文件所在目录 （完）\n","wordCount":"184","inLanguage":"zh","datePublished":"2024-02-17T02:17:18+08:00","dateModified":"2024-02-17T02:17:18+08:00","author":{"@type":"Person","name":"Cukoo"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://cukoo-li.github.io/posts/gdal-c++%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"},"publisher":{"@type":"Organization","name":"Cukoo's Blog","logo":{"@type":"ImageObject","url":"https://cukoo-li.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://cukoo-li.github.io/ accesskey=h title="Cukoo's Blog (Alt + H)">Cukoo's Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)"><svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg><svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://cukoo-li.github.io/posts title=✍🏻文章><span>✍🏻文章</span></a></li><li><a href=https://cukoo-li.github.io/categories title=🗃️分类><span>🗃️分类</span></a></li><li><a href=https://cukoo-li.github.io/about title=ℹ️关于><span>ℹ️关于</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">gdal C++开发环境搭建</h1><div class=post-meta><span title='2024-02-17 02:17:18 +0800 CST'>2024年2月17日</span>&nbsp;·&nbsp;Cukoo&nbsp;|&nbsp;<a href=https://github.com/Cukoo-Li/Cukoo-Li.github.io/tree/main/content/posts/gdal%20C++%e5%bc%80%e5%8f%91%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba/index.zh.md rel="noopener noreferrer" target=_blank>提交修改意见</a></div></header><div class=toc><details><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e5%89%8d%e8%a8%80 aria-label=前言>前言</a></li><li><a href=#%e5%9f%ba%e4%ba%8evcpkg%e7%9a%84gdal%e5%ba%93%e7%bc%96%e8%af%91 aria-label=基于vcpkg的gdal库编译>基于vcpkg的gdal库编译</a></li><li><a href=#visual-studio%e9%a1%b9%e7%9b%ae%e5%b1%9e%e6%80%a7%e8%ae%be%e7%bd%ae aria-label="Visual Studio项目属性设置">Visual Studio项目属性设置</a></li><li><a href=#%e6%b5%8b%e8%af%95 aria-label=测试>测试</a></li></ul></div></details></div><div class=post-content><h2 id=前言>前言<a hidden class=anchor aria-hidden=true href=#前言>#</a></h2><p>在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中，要使用第三方库，首先需要进行以下步骤：</p><ol><li>获取库文件和头文件</li><li>告知编译器头文件的所在目录</li><li>告知编译器库文件的所在目录</li><li>告知编译器要链接的库文件</li></ol><p>对于某些第三方开源库，官方并没有提供编译好的库文件，此时就需要自己动手编译，得到适合于自己平台下的库文件。</p><p>出于毕业要求的需要，笔者前段时间写了一个软著，其中某些功能的实现需要用到gdal。而gdal就属于上述所说的“需要自己动手编译”的开源库，当然你也可以去寻找别人已经编译好的库文件。</p><p>搭建使用第三方库的C++开发环境的核心原理是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。以下将对“Windows下的gdal开发环境搭建过程”做一个记录，以供自己学习之用，也希望能够帮到有需要的人。</p><h2 id=基于vcpkg的gdal库编译>基于vcpkg的gdal库编译<a hidden class=anchor aria-hidden=true href=#基于vcpkg的gdal库编译>#</a></h2><p><a href=https://learn.microsoft.com/zh-cn/vcpkg/get_started/overview>vcpkg</a>是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。</p><ul><li><p>下载vcpkg</p><p>使用git-bash中执行以下命令，以下载vcpkg。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>git clone https://github.com/microsoft/vcpkg.git
-</span></span></code></pre></div><p><img loading=lazy src=images/image-20240216160315289-17081075063791.png alt=image-20240216160315289></p><p>如果你没有git，打开上述命令中的网址，点击"Code"-&ldquo;Download ZIP&rdquo;，下载后解压即可。</p><p><img loading=lazy src=images/image-20240216160534593-17081075063792.png alt=image-20240216160534593></p></li><li><p>使用vcpkg进行gdal库编译</p><p>在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>.<span class=se>\v</span>cpkg<span class=se>\b</span>ootstrap-vcpkg.bat
-</span></span><span class=line><span class=cl>.<span class=se>\v</span>cpkg<span class=se>\v</span>cpkg install gdal:x64-windows
-</span></span></code></pre></div><p>接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在笔者的电脑中，耗时42分钟。</p><p><img loading=lazy src=images/image-20240216165859407-17081075063793.png alt=image-20240216165859407></p></li><li><p>查看库文件和头文件</p><p>进入<code>vcpkg/installed/x64-windows</code></p><ul><li>bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib)</li><li>debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib)</li><li>include文件夹中存放着头文件</li></ul><p><img loading=lazy src=images/image-20240216170134259-17081075063794.png alt=image-20240216170134259></p></li></ul><p>以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考<a href=https://github.com/microsoft/vcpkg>vcpkg的GitHub仓库</a>。</p><h2 id=visual-studio项目属性设置>Visual Studio项目属性设置<a hidden class=anchor aria-hidden=true href=#visual-studio项目属性设置>#</a></h2><p>打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。</p><p><img loading=lazy src=images/image-20240216164402466-17081075063795.png alt=image-20240216164402466></p><p>在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。</p><ol><li><p>在解决方案目录下新建名为"gdal"的文件夹</p><p><img loading=lazy src=images/image-20240216170951117-17081075063806.png alt=image-20240216170951117></p></li><li><p>将<code>vcpkg/installed/x64-windows</code>下的"bin"、&ldquo;debug&rdquo;、&ldquo;include&rdquo;、&ldquo;lib"文件夹拷贝至刚刚新建的"gdal"文件夹中</p><p><img loading=lazy src=images/image-20240216171248383-17081075063807.png alt=image-20240216171248383></p></li></ol><p>接下来我们正式开始进行项目属性设置（以Debug配置为例）</p><ul><li><p>设置附加包含目录 - 告知编译器头文件的所在目录</p><p>在"C/C++&rdquo;-&ldquo;常规&rdquo;-&ldquo;附加包含目录"中填写<code>$(SolutionDir)gdal\include</code></p><p><img loading=lazy src=images/image-20240216171714570-17081075063808.png alt=image-20240216171714570></p></li><li><p>设置附加库目录 - 告知编译器.lib库文件的所在目录</p><p>在"链接器&rdquo;-&ldquo;常规&rdquo;-&ldquo;附加库目录"中填写<code>$(SolutionDir)gdal\debug\lib</code></p><p><img loading=lazy src=images/image-20240216172545095-17081075063809.png alt=image-20240216172545095></p></li><li><p>设置环境 - 告知编译器.dll库文件的所在目录</p><p>在"调试&rdquo;-&ldquo;环境"中填写<code>Path = $(SolutionDir)gdal\debug\bin</code></p><p><img loading=lazy src=images/image-20240216172928352-170810750638010.png alt=image-20240216172928352></p></li><li><p>设置附加依赖项 - 告知编译器要链接的库文件</p><p>在"链接器&rdquo;-&ldquo;输入&rdquo;-&ldquo;附加依赖项"中填写<code>gdald.lib</code></p><p><img loading=lazy src=images/image-20240216172836012-170810750638011.png alt=image-20240216172836012></p></li></ul><p>最后点击确定，项目属性设置完毕。</p><h2 id=测试>测试<a hidden class=anchor aria-hidden=true href=#测试>#</a></h2><p>在main.cpp文件中输入如下代码，注意要将第7行的文件路径改成你自己的，第13行的函数实参也要做相应的修改。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;ogrsf_frmts.h&#34;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;iostream&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span><span class=k>using</span> <span class=k>namespace</span> <span class=n>std</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>    <span class=n>GDALAllRegister</span><span class=p>();</span>		<span class=c1>// 自动注册所有驱动，只能读不能写
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>GDALDataset</span><span class=o>*</span> <span class=n>poDS</span> <span class=o>=</span> <span class=k>static_cast</span><span class=o>&lt;</span><span class=n>GDALDataset</span><span class=o>*&gt;</span><span class=p>(</span><span class=n>GDALOpenEx</span><span class=p>(</span>
-</span></span><span class=line><span class=cl>        <span class=s>&#34;./data/point.shp&#34;</span><span class=p>,</span> <span class=n>GDAL_OF_VECTOR</span><span class=p>,</span> <span class=k>nullptr</span><span class=p>,</span> <span class=k>nullptr</span><span class=p>,</span> <span class=k>nullptr</span><span class=p>));</span>	<span class=c1>// 创建Dataset
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=n>poDS</span> <span class=o>==</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>        <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=s>&#34;open failed.&#34;</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>        <span class=n>exit</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>    <span class=p>}</span>
-</span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>    <span class=n>OGRLayer</span><span class=o>*</span> <span class=n>poLayer</span> <span class=o>=</span> <span class=n>poDS</span><span class=o>-&gt;</span><span class=n>GetLayerByName</span><span class=p>(</span><span class=s>&#34;point&#34;</span><span class=p>);</span>		<span class=c1>// 获取Layer，shapefile格式的LayerName就是文件名
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>OGRFeatureDefn</span><span class=o>*</span> <span class=n>poFDefn</span> <span class=o>=</span> <span class=n>poLayer</span><span class=o>-&gt;</span><span class=n>GetLayerDefn</span><span class=p>();</span>		<span class=c1>// 获取Layer的定义（包含Geometry和Field的定义）
-</span></span></span><span class=line><span class=cl><span class=c1></span>
-</span></span><span class=line><span class=cl>    <span class=n>poLayer</span><span class=o>-&gt;</span><span class=n>ResetReading</span><span class=p>();</span>		<span class=c1>// 重置游标
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>OGRFeature</span><span class=o>*</span> <span class=n>poFeature</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=p>((</span><span class=n>poFeature</span> <span class=o>=</span> <span class=n>poLayer</span><span class=o>-&gt;</span><span class=n>GetNextFeature</span><span class=p>())</span> <span class=o>!=</span> <span class=k>nullptr</span><span class=p>)</span> <span class=p>{</span>		<span class=c1>// 输出Layer中所有Feature的字段值
-</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>iField</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>iField</span> <span class=o>&lt;</span> <span class=n>poFDefn</span><span class=o>-&gt;</span><span class=n>GetFieldCount</span><span class=p>();</span> <span class=o>++</span><span class=n>iField</span><span class=p>)</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>            <span class=n>OGRFieldDefn</span><span class=o>*</span> <span class=n>poFieldDefn</span> <span class=o>=</span> <span class=n>poFDefn</span><span class=o>-&gt;</span><span class=n>GetFieldDefn</span><span class=p>(</span><span class=n>iField</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>            <span class=k>switch</span> <span class=p>(</span><span class=n>poFieldDefn</span><span class=o>-&gt;</span><span class=n>GetType</span><span class=p>())</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                <span class=k>case</span> <span class=nl>OFTInteger</span><span class=p>:</span>
-</span></span><span class=line><span class=cl>                    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;%d,&#34;</span><span class=p>,</span> <span class=n>poFeature</span><span class=o>-&gt;</span><span class=n>GetFieldAsInteger</span><span class=p>(</span><span class=n>iField</span><span class=p>));</span>
-</span></span><span class=line><span class=cl>                    <span class=k>break</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=k>case</span> <span class=nl>OFTInteger64</span><span class=p>:</span>
-</span></span><span class=line><span class=cl>                    <span class=n>printf</span><span class=p>(</span><span class=n>CPL_FRMT_GIB</span> <span class=s>&#34;,&#34;</span><span class=p>,</span>
-</span></span><span class=line><span class=cl>                           <span class=n>poFeature</span><span class=o>-&gt;</span><span class=n>GetFieldAsInteger64</span><span class=p>(</span><span class=n>iField</span><span class=p>));</span>
-</span></span><span class=line><span class=cl>                    <span class=k>break</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=k>case</span> <span class=nl>OFTReal</span><span class=p>:</span>
-</span></span><span class=line><span class=cl>                    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;%.3f,&#34;</span><span class=p>,</span> <span class=n>poFeature</span><span class=o>-&gt;</span><span class=n>GetFieldAsDouble</span><span class=p>(</span><span class=n>iField</span><span class=p>));</span>
-</span></span><span class=line><span class=cl>                    <span class=k>break</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=k>case</span> <span class=nl>OFTString</span><span class=p>:</span>
-</span></span><span class=line><span class=cl>                    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s,&#34;</span><span class=p>,</span> <span class=n>poFeature</span><span class=o>-&gt;</span><span class=n>GetFieldAsString</span><span class=p>(</span><span class=n>iField</span><span class=p>));</span>
-</span></span><span class=line><span class=cl>                    <span class=k>break</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=k>default</span><span class=o>:</span>
-</span></span><span class=line><span class=cl>                    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s,&#34;</span><span class=p>,</span> <span class=n>poFeature</span><span class=o>-&gt;</span><span class=n>GetFieldAsString</span><span class=p>(</span><span class=n>iField</span><span class=p>));</span>
-</span></span><span class=line><span class=cl>                    <span class=k>break</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=p>}</span>
-</span></span><span class=line><span class=cl>        <span class=p>}</span>
-</span></span><span class=line><span class=cl>        <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>        <span class=n>OGRFeature</span><span class=o>::</span><span class=n>DestroyFeature</span><span class=p>(</span><span class=n>poFeature</span><span class=p>);</span>		<span class=c1>// GetNextFeature()返回的似乎是一个对象的拷贝，因此需要自行销毁
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>}</span>
-</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>点击“开始调试”，不出意外的话，程序可以正常运行。</p><p>但是，控制台首行会提示"Cannot find proj.db&rdquo;，所谓的"proj.db"实际存放在<code>vcpkg\installed\x64-windows\share\proj</code>中，我们可以使用以下两种方式让程序找到它。</p><ol><li>利用名为"PROJ_LIB"的环境变量，指明"proj.db"所在目录</li><li>将"proj.db"拷贝到项目目录以及可执行文件所在目录</li></ol><p>（完）</p></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2024 <a href=https://cukoo-li.github.io/>Cukoo's Blog</a></span>
-<span>Powered by
-<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
-        <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentcolor"><path d="M12 6H0l6-6z"/></svg>
-</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerHTML="复制";function s(){t.innerHTML="已复制！",setTimeout(()=>{t.innerHTML="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){navigator.clipboard.writeText(e.textContent),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>gdal C&#43;&#43;开发环境搭建 | Cukoo&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="aaa">
+<meta name="author" content="Cukoo">
+<link rel="canonical" href="https://cukoo-li.github.io/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.9687911c0cc5c59b6889747e8bd3cb728b851079086956d1ccbc15a3dbb14b64.css" integrity="sha256-loeRHAzFxZtoiXR&#43;i9PLcouFEHkIaVbRzLwVo9uxS2Q=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://cukoo-li.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cukoo-li.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cukoo-li.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://cukoo-li.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://cukoo-li.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="gdal C&#43;&#43;开发环境搭建" />
+<meta property="og:description" content="aaa" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cukoo-li.github.io/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" /><meta property="og:image" content="https://cukoo-li.github.io/images/papermod-cover.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-02-17T02:17:18+08:00" />
+<meta property="article:modified_time" content="2024-02-17T02:17:18+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cukoo-li.github.io/images/papermod-cover.png"/>
+
+<meta name="twitter:title" content="gdal C&#43;&#43;开发环境搭建"/>
+<meta name="twitter:description" content="aaa"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "文章",
+      "item": "https://cukoo-li.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "gdal C++开发环境搭建",
+      "item": "https://cukoo-li.github.io/posts/gdal-c++%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "gdal C++开发环境搭建",
+  "name": "gdal C\u002b\u002b开发环境搭建",
+  "description": "aaa",
+  "keywords": [
+    
+  ],
+  "articleBody": "前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中，要使用第三方库，首先需要进行以下步骤：\n获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 对于某些第三方开源库，官方并没有提供编译好的库文件，此时就需要自己动手编译，得到适合于自己平台下的库文件。\n出于毕业要求的需要，笔者前段时间写了一个软著，其中某些功能的实现需要用到gdal。而gdal就属于上述所说的“需要自己动手编译”的开源库，当然你也可以去寻找别人已经编译好的库文件。\n搭建使用第三方库的C++开发环境的核心原理是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。以下将对“Windows下的gdal开发环境搭建过程”做一个记录，以供自己学习之用，也希望能够帮到有需要的人。\n基于vcpkg的gdal库编译 vcpkg是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。\n下载vcpkg\n使用git-bash中执行以下命令，以下载vcpkg。\ngit clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上述命令中的网址，点击\"Code\"-“Download ZIP”，下载后解压即可。\n使用vcpkg进行gdal库编译\n在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。\n.\\vcpkg\\bootstrap-vcpkg.bat .\\vcpkg\\vcpkg install gdal:x64-windows 接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在笔者的电脑中，耗时42分钟。\n查看库文件和头文件\n进入vcpkg/installed/x64-windows\nbin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库。\nVisual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。\n在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。\n在解决方案目录下新建名为\"gdal\"的文件夹\n将vcpkg/installed/x64-windows下的\"bin\"、“debug”、“include”、“lib\"文件夹拷贝至刚刚新建的\"gdal\"文件夹中\n接下来我们正式开始进行项目属性设置（以Debug配置为例）\n设置附加包含目录 - 告知编译器头文件的所在目录\n在\"C/C++”-“常规”-“附加包含目录\"中填写$(SolutionDir)gdal\\include\n设置附加库目录 - 告知编译器.lib库文件的所在目录\n在\"链接器”-“常规”-“附加库目录\"中填写$(SolutionDir)gdal\\debug\\lib\n设置环境 - 告知编译器.dll库文件的所在目录\n在\"调试”-“环境\"中填写Path = $(SolutionDir)gdal\\debug\\bin\n设置附加依赖项 - 告知编译器要链接的库文件\n在\"链接器”-“输入”-“附加依赖项\"中填写gdald.lib\n最后点击确定，项目属性设置完毕。\n测试 在main.cpp文件中输入如下代码，注意要将第7行的文件路径改成你自己的，第13行的函数实参也要做相应的修改。\n#include \"ogrsf_frmts.h\" #include using namespace std; int main() { GDALAllRegister();\t// 自动注册所有驱动，只能读不能写 GDALDataset* poDS = static_cast\u003cGDALDataset*\u003e(GDALOpenEx( \"./data/point.shp\", GDAL_OF_VECTOR, nullptr, nullptr, nullptr));\t// 创建Dataset if (poDS == nullptr) { cout \u003c\u003c \"open failed.\" \u003c\u003c endl; exit(1); } OGRLayer* poLayer = poDS-\u003eGetLayerByName(\"point\");\t// 获取Layer，shapefile格式的LayerName就是文件名 OGRFeatureDefn* poFDefn = poLayer-\u003eGetLayerDefn();\t// 获取Layer的定义（包含Geometry和Field的定义） poLayer-\u003eResetReading();\t// 重置游标 OGRFeature* poFeature; while ((poFeature = poLayer-\u003eGetNextFeature()) != nullptr) {\t// 输出Layer中所有Feature的字段值 for (int iField = 0; iField \u003c poFDefn-\u003eGetFieldCount(); ++iField) { OGRFieldDefn* poFieldDefn = poFDefn-\u003eGetFieldDefn(iField); switch (poFieldDefn-\u003eGetType()) { case OFTInteger: printf(\"%d,\", poFeature-\u003eGetFieldAsInteger(iField)); break; case OFTInteger64: printf(CPL_FRMT_GIB \",\", poFeature-\u003eGetFieldAsInteger64(iField)); break; case OFTReal: printf(\"%.3f,\", poFeature-\u003eGetFieldAsDouble(iField)); break; case OFTString: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; default: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; } } cout \u003c\u003c endl; OGRFeature::DestroyFeature(poFeature);\t// GetNextFeature()返回的似乎是一个对象的拷贝，因此需要自行销毁 } return 0; } 点击“开始调试”，不出意外的话，程序可以正常运行。\n但是，控制台首行会提示\"Cannot find proj.db”，所谓的\"proj.db\"实际存放在vcpkg\\installed\\x64-windows\\share\\proj中，我们可以使用以下两种方式让程序找到它。\n利用名为\"PROJ_LIB\"的环境变量，指明\"proj.db\"所在目录 将\"proj.db\"拷贝到项目目录以及可执行文件所在目录 （完）\n",
+  "wordCount" : "184",
+  "inLanguage": "zh",
+  "datePublished": "2024-02-17T02:17:18+08:00",
+  "dateModified": "2024-02-17T02:17:18+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Cukoo"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://cukoo-li.github.io/posts/gdal-c++%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cukoo's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cukoo-li.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://cukoo-li.github.io/" accesskey="h" title="Cukoo&#39;s Blog (Alt + H)">Cukoo&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://cukoo-li.github.io/posts" title="✍🏻文章">
+                    <span>✍🏻文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoo-li.github.io/categories" title="🗃️分类">
+                    <span>🗃️分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoo-li.github.io/about" title="ℹ️关于">
+                    <span>ℹ️关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      gdal C&#43;&#43;开发环境搭建
+    </h1>
+    <div class="post-meta"><span title='2024-02-17 02:17:18 +0800 CST'>2024年2月17日</span>&nbsp;·&nbsp;Cukoo&nbsp;|&nbsp;<a href="https://github.com/Cukoo-Li/Cukoo-Li.github.io/tree/main/content/posts/gdal%20C&#43;&#43;%e5%bc%80%e5%8f%91%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba/index.zh.md" rel="noopener noreferrer" target="_blank">提交修改意见</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%89%8d%e8%a8%80" aria-label="前言">前言</a></li>
+                <li>
+                    <a href="#%e5%9f%ba%e4%ba%8evcpkg%e7%9a%84gdal%e5%ba%93%e7%bc%96%e8%af%91" aria-label="基于vcpkg的gdal库编译">基于vcpkg的gdal库编译</a></li>
+                <li>
+                    <a href="#visual-studio%e9%a1%b9%e7%9b%ae%e5%b1%9e%e6%80%a7%e8%ae%be%e7%bd%ae" aria-label="Visual Studio项目属性设置">Visual Studio项目属性设置</a></li>
+                <li>
+                    <a href="#%e6%b5%8b%e8%af%95" aria-label="测试">测试</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="前言">前言<a hidden class="anchor" aria-hidden="true" href="#前言">#</a></h2>
+<p>在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中，要使用第三方库，首先需要进行以下步骤：</p>
+<ol>
+<li>获取库文件和头文件</li>
+<li>告知编译器头文件的所在目录</li>
+<li>告知编译器库文件的所在目录</li>
+<li>告知编译器要链接的库文件</li>
+</ol>
+<p>对于某些第三方开源库，官方并没有提供编译好的库文件，此时就需要自己动手编译，得到适合于自己平台下的库文件。</p>
+<p>出于毕业要求的需要，笔者前段时间写了一个软著，其中某些功能的实现需要用到gdal。而gdal就属于上述所说的“需要自己动手编译”的开源库，当然你也可以去寻找别人已经编译好的库文件。</p>
+<p>搭建使用第三方库的C++开发环境的核心原理是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。以下将对“Windows下的gdal开发环境搭建过程”做一个记录，以供自己学习之用，也希望能够帮到有需要的人。</p>
+<h2 id="基于vcpkg的gdal库编译">基于vcpkg的gdal库编译<a hidden class="anchor" aria-hidden="true" href="#基于vcpkg的gdal库编译">#</a></h2>
+<p><a href="https://learn.microsoft.com/zh-cn/vcpkg/get_started/overview">vcpkg</a>是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。</p>
+<ul>
+<li>
+<p>下载vcpkg</p>
+<p>使用git-bash中执行以下命令，以下载vcpkg。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git clone https://github.com/microsoft/vcpkg.git
+</span></span></code></pre></div><p><img loading="lazy" src="images/image-20240216160315289-17081075063791.png" alt="image-20240216160315289"  />
+</p>
+<p>如果你没有git，打开上述命令中的网址，点击&quot;Code&quot;-&ldquo;Download ZIP&rdquo;，下载后解压即可。</p>
+<p><img loading="lazy" src="images/image-20240216160534593-17081075063792.png" alt="image-20240216160534593"  />
+</p>
+</li>
+<li>
+<p>使用vcpkg进行gdal库编译</p>
+<p>在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">.<span class="se">\v</span>cpkg<span class="se">\b</span>ootstrap-vcpkg.bat
+</span></span><span class="line"><span class="cl">.<span class="se">\v</span>cpkg<span class="se">\v</span>cpkg install gdal:x64-windows
+</span></span></code></pre></div><p>接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在笔者的电脑中，耗时42分钟。</p>
+<p><img loading="lazy" src="images/image-20240216165859407-17081075063793.png" alt="image-20240216165859407"  />
+</p>
+</li>
+<li>
+<p>查看库文件和头文件</p>
+<p>进入<code>vcpkg/installed/x64-windows</code></p>
+<ul>
+<li>bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib)</li>
+<li>debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib)</li>
+<li>include文件夹中存放着头文件</li>
+</ul>
+<p><img loading="lazy" src="images/image-20240216170134259-17081075063794.png" alt="image-20240216170134259"  />
+</p>
+</li>
+</ul>
+<p>以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考<a href="https://github.com/microsoft/vcpkg">vcpkg的GitHub仓库</a>。</p>
+<h2 id="visual-studio项目属性设置">Visual Studio项目属性设置<a hidden class="anchor" aria-hidden="true" href="#visual-studio项目属性设置">#</a></h2>
+<p>打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。</p>
+<p><img loading="lazy" src="images/image-20240216164402466-17081075063795.png" alt="image-20240216164402466"  />
+</p>
+<p>在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。</p>
+<ol>
+<li>
+<p>在解决方案目录下新建名为&quot;gdal&quot;的文件夹</p>
+<p><img loading="lazy" src="images/image-20240216170951117-17081075063806.png" alt="image-20240216170951117"  />
+</p>
+</li>
+<li>
+<p>将<code>vcpkg/installed/x64-windows</code>下的&quot;bin&quot;、&ldquo;debug&rdquo;、&ldquo;include&rdquo;、&ldquo;lib&quot;文件夹拷贝至刚刚新建的&quot;gdal&quot;文件夹中</p>
+<p><img loading="lazy" src="images/image-20240216171248383-17081075063807.png" alt="image-20240216171248383"  />
+</p>
+</li>
+</ol>
+<p>接下来我们正式开始进行项目属性设置（以Debug配置为例）</p>
+<ul>
+<li>
+<p>设置附加包含目录 - 告知编译器头文件的所在目录</p>
+<p>在&quot;C/C++&rdquo;-&ldquo;常规&rdquo;-&ldquo;附加包含目录&quot;中填写<code>$(SolutionDir)gdal\include</code></p>
+<p><img loading="lazy" src="images/image-20240216171714570-17081075063808.png" alt="image-20240216171714570"  />
+</p>
+</li>
+<li>
+<p>设置附加库目录 - 告知编译器.lib库文件的所在目录</p>
+<p>在&quot;链接器&rdquo;-&ldquo;常规&rdquo;-&ldquo;附加库目录&quot;中填写<code>$(SolutionDir)gdal\debug\lib</code></p>
+<p><img loading="lazy" src="images/image-20240216172545095-17081075063809.png" alt="image-20240216172545095"  />
+</p>
+</li>
+<li>
+<p>设置环境 - 告知编译器.dll库文件的所在目录</p>
+<p>在&quot;调试&rdquo;-&ldquo;环境&quot;中填写<code>Path = $(SolutionDir)gdal\debug\bin</code></p>
+<p><img loading="lazy" src="images/image-20240216172928352-170810750638010.png" alt="image-20240216172928352"  />
+</p>
+</li>
+<li>
+<p>设置附加依赖项 - 告知编译器要链接的库文件</p>
+<p>在&quot;链接器&rdquo;-&ldquo;输入&rdquo;-&ldquo;附加依赖项&quot;中填写<code>gdald.lib</code></p>
+<p><img loading="lazy" src="images/image-20240216172836012-170810750638011.png" alt="image-20240216172836012"  />
+</p>
+</li>
+</ul>
+<p>最后点击确定，项目属性设置完毕。</p>
+<h2 id="测试">测试<a hidden class="anchor" aria-hidden="true" href="#测试">#</a></h2>
+<p>在main.cpp文件中输入如下代码，注意要将第7行的文件路径改成你自己的，第13行的函数实参也要做相应的修改。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&#34;ogrsf_frmts.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GDALAllRegister</span><span class="p">();</span>		<span class="c1">// 自动注册所有驱动，只能读不能写
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">GDALDataset</span><span class="o">*</span> <span class="n">poDS</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">GDALDataset</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">GDALOpenEx</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="s">&#34;./data/point.shp&#34;</span><span class="p">,</span> <span class="n">GDAL_OF_VECTOR</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">));</span>	<span class="c1">// 创建Dataset
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">poDS</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;open failed.&#34;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">OGRLayer</span><span class="o">*</span> <span class="n">poLayer</span> <span class="o">=</span> <span class="n">poDS</span><span class="o">-&gt;</span><span class="n">GetLayerByName</span><span class="p">(</span><span class="s">&#34;point&#34;</span><span class="p">);</span>		<span class="c1">// 获取Layer，shapefile格式的LayerName就是文件名
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">OGRFeatureDefn</span><span class="o">*</span> <span class="n">poFDefn</span> <span class="o">=</span> <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">GetLayerDefn</span><span class="p">();</span>		<span class="c1">// 获取Layer的定义（包含Geometry和Field的定义）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">    <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">ResetReading</span><span class="p">();</span>		<span class="c1">// 重置游标
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">OGRFeature</span><span class="o">*</span> <span class="n">poFeature</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">((</span><span class="n">poFeature</span> <span class="o">=</span> <span class="n">poLayer</span><span class="o">-&gt;</span><span class="n">GetNextFeature</span><span class="p">())</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>		<span class="c1">// 输出Layer中所有Feature的字段值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">iField</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iField</span> <span class="o">&lt;</span> <span class="n">poFDefn</span><span class="o">-&gt;</span><span class="n">GetFieldCount</span><span class="p">();</span> <span class="o">++</span><span class="n">iField</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">OGRFieldDefn</span><span class="o">*</span> <span class="n">poFieldDefn</span> <span class="o">=</span> <span class="n">poFDefn</span><span class="o">-&gt;</span><span class="n">GetFieldDefn</span><span class="p">(</span><span class="n">iField</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">switch</span> <span class="p">(</span><span class="n">poFieldDefn</span><span class="o">-&gt;</span><span class="n">GetType</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTInteger</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%d,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTInteger64</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="n">CPL_FRMT_GIB</span> <span class="s">&#34;,&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                           <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsInteger64</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTReal</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%.3f,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsDouble</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">case</span> <span class="nl">OFTString</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">default</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">printf</span><span class="p">(</span><span class="s">&#34;%s,&#34;</span><span class="p">,</span> <span class="n">poFeature</span><span class="o">-&gt;</span><span class="n">GetFieldAsString</span><span class="p">(</span><span class="n">iField</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">OGRFeature</span><span class="o">::</span><span class="n">DestroyFeature</span><span class="p">(</span><span class="n">poFeature</span><span class="p">);</span>		<span class="c1">// GetNextFeature()返回的似乎是一个对象的拷贝，因此需要自行销毁
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>点击“开始调试”，不出意外的话，程序可以正常运行。</p>
+<p>但是，控制台首行会提示&quot;Cannot find proj.db&rdquo;，所谓的&quot;proj.db&quot;实际存放在<code>vcpkg\installed\x64-windows\share\proj</code>中，我们可以使用以下两种方式让程序找到它。</p>
+<ol>
+<li>利用名为&quot;PROJ_LIB&quot;的环境变量，指明&quot;proj.db&quot;所在目录</li>
+<li>将&quot;proj.db&quot;拷贝到项目目录以及可执行文件所在目录</li>
+</ol>
+<p>（完）</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://cukoo-li.github.io/">Cukoo&#39;s Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
