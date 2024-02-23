@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Cukoo&#39;s Blog</title>
-    <link>https://cukoo-li.github.io/</link>
+    <link>https://cukoohhh.cn/</link>
     <description>Recent content on Cukoo&#39;s Blog</description>
     <image>
       <title>Cukoo&#39;s Blog</title>
-      <url>https://cukoo-li.github.io/images/papermod-cover.png</url>
-      <link>https://cukoo-li.github.io/images/papermod-cover.png</link>
+      <url>https://cukoohhh.cn/images/papermod-cover.png</url>
+      <link>https://cukoohhh.cn/images/papermod-cover.png</link>
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
     <lastBuildDate>Sat, 17 Feb 2024 02:17:18 +0800</lastBuildDate>
-    <atom:link href="https://cukoo-li.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://cukoohhh.cn/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>gdal C&#43;&#43;开发环境搭建</title>
-      <link>https://cukoo-li.github.io/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
+      <link>https://cukoohhh.cn/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
       <pubDate>Sat, 17 Feb 2024 02:17:18 +0800</pubDate>
-      <guid>https://cukoo-li.github.io/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
+      <guid>https://cukoohhh.cn/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
       <description>前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中使用第三方库，首先需要进行以下步骤：
 获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 对于某些第三方开源库，官方并没有提供编译好的库文件，此时就需要自己动手编译，得到适用于自己平台下的库文件。
 出于毕业要求的需要，我前段时间写了一个软著，其中某些功能的实现需要用到gdal。而gdal就属于上述所说的“需要自己动手编译”的开源库，当然你也可以去寻找别人已经编译好的库文件。
