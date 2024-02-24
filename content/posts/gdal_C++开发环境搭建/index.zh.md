@@ -58,8 +58,8 @@ date: 2024-02-17T02:17:18+08:00
 
   进入`vcpkg/installed/x64-windows`
 
-  - bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib)
-  - debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib)
+  - bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库（也可能是动态库的导入库）文件(.lib)
+  - debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库（也可能是动态库的导入库）文件(.lib)
   - include文件夹中存放着头文件
 
   ![image-20240216170134259](images/image-20240216170134259-17081075063794.png)
