@@ -14,7 +14,7 @@
     <lastBuildDate>Sat, 17 Feb 2024 02:17:18 +0800</lastBuildDate>
     <atom:link href="https://cukoohhh.cn/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>gdal C&#43;&#43;开发环境搭建</title>
+      <title>在Windows下搭建gdal C&#43;&#43;开发环境</title>
       <link>https://cukoohhh.cn/posts/gdal_c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
       <pubDate>Sat, 17 Feb 2024 02:17:18 +0800</pubDate>
       <guid>https://cukoohhh.cn/posts/gdal_c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
@@ -35,9 +35,7 @@ git clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上�
 bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。
 Visual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。
 在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。
-在解决方案目录下新建一个名为&amp;quot;gdal&amp;quot;的文件夹
-将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中
-接下来我们正式开始进行项目属性设置（以Debug配置为例）
+在解决方案目录下新建一个名为&amp;quot;gdal&amp;quot;的文件夹 将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中 接下来我们正式开始进行项目属性设置（以Debug配置为例）
 设置附加包含目录 - 告知编译器头文件的所在目录
 在&amp;quot;C/C++&amp;quot;-&amp;ldquo;常规&amp;rdquo;-&amp;ldquo;附加包含目录&amp;quot;中填写$(SolutionDir)gdal\include
 设置附加库目录 - 告知编译器.lib库文件的所在目录

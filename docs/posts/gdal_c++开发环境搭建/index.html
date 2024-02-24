@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>gdal C&#43;&#43;开发环境搭建 | Cukoo&#39;s Blog</title>
+<title>在Windows下搭建gdal C&#43;&#43;开发环境 | Cukoo&#39;s Blog</title>
 <meta name="keywords" content="">
 <meta name="description" content="前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C&#43;&#43;中使用第三方库，首先需要进行以下步骤：
 获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：
@@ -24,9 +24,7 @@ git clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上�
 bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。
 Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。
 在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。
-在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹
-将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中
-接下来我们正式开始进行项目属性设置（以Debug配置为例）
+在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹 将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中 接下来我们正式开始进行项目属性设置（以Debug配置为例）
 设置附加包含目录 - 告知编译器头文件的所在目录
 在&quot;C/C&#43;&#43;&quot;-&ldquo;常规&rdquo;-&ldquo;附加包含目录&quot;中填写$(SolutionDir)gdal\include
 设置附加库目录 - 告知编译器.lib库文件的所在目录
@@ -84,7 +82,7 @@ Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空
         }
 
     </style>
-</noscript><meta property="og:title" content="gdal C&#43;&#43;开发环境搭建" />
+</noscript><meta property="og:title" content="在Windows下搭建gdal C&#43;&#43;开发环境" />
 <meta property="og:description" content="前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C&#43;&#43;中使用第三方库，首先需要进行以下步骤：
 获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：
 库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。
@@ -102,9 +100,7 @@ git clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上�
 bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。
 Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。
 在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。
-在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹
-将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中
-接下来我们正式开始进行项目属性设置（以Debug配置为例）
+在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹 将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中 接下来我们正式开始进行项目属性设置（以Debug配置为例）
 设置附加包含目录 - 告知编译器头文件的所在目录
 在&quot;C/C&#43;&#43;&quot;-&ldquo;常规&rdquo;-&ldquo;附加包含目录&quot;中填写$(SolutionDir)gdal\include
 设置附加库目录 - 告知编译器.lib库文件的所在目录
@@ -124,7 +120,7 @@ Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:image" content="https://cukoohhh.cn/images/papermod-cover.png"/>
 
-<meta name="twitter:title" content="gdal C&#43;&#43;开发环境搭建"/>
+<meta name="twitter:title" content="在Windows下搭建gdal C&#43;&#43;开发环境"/>
 <meta name="twitter:description" content="前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C&#43;&#43;中使用第三方库，首先需要进行以下步骤：
 获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：
 库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。
@@ -142,9 +138,7 @@ git clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上�
 bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。
 Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。
 在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。
-在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹
-将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中
-接下来我们正式开始进行项目属性设置（以Debug配置为例）
+在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹 将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中 接下来我们正式开始进行项目属性设置（以Debug配置为例）
 设置附加包含目录 - 告知编译器头文件的所在目录
 在&quot;C/C&#43;&#43;&quot;-&ldquo;常规&rdquo;-&ldquo;附加包含目录&quot;中填写$(SolutionDir)gdal\include
 设置附加库目录 - 告知编译器.lib库文件的所在目录
@@ -172,7 +166,7 @@ Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空
     {
       "@type": "ListItem",
       "position":  2 ,
-      "name": "gdal C++开发环境搭建",
+      "name": "在Windows下搭建gdal C++开发环境",
       "item": "https://cukoohhh.cn/posts/gdal_c++%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"
     }
   ]
@@ -182,13 +176,13 @@ Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "gdal C++开发环境搭建",
-  "name": "gdal C\u002b\u002b开发环境搭建",
-  "description": "前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中使用第三方库，首先需要进行以下步骤：\n获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：\n库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。\n搭建使用第三方库的C++开发环境的核心步骤是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。\n出于毕业要求的需要，我前段时间写了个软著，其中涉及到gdal库的使用。鉴于网上针对这个库的C++开发环境搭建的教程相对较少，以下是我在Windows下的搭建gdal C++开发环境时做的一个记录，希望能够帮到有需要的人。\n基于vcpkg的gdal库编译 vcpkg是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。\n下载vcpkg\n使用git-bash中执行以下命令，以下载vcpkg。\ngit clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上述命令中的网址，点击\u0026quot;Code\u0026quot;-\u0026ldquo;Download ZIP\u0026rdquo;，下载后解压即可。\n使用vcpkg进行gdal库编译\n在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。\n.\\vcpkg\\bootstrap-vcpkg.bat .\\vcpkg\\vcpkg install gdal:x64-windows 接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在我的电脑中，耗时42分钟。\n查看库文件和头文件\n进入vcpkg/installed/x64-windows\nbin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。\nVisual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。\n在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。\n在解决方案目录下新建一个名为\u0026quot;gdal\u0026quot;的文件夹\n将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中\n接下来我们正式开始进行项目属性设置（以Debug配置为例）\n设置附加包含目录 - 告知编译器头文件的所在目录\n在\u0026quot;C/C++\u0026quot;-\u0026ldquo;常规\u0026rdquo;-\u0026ldquo;附加包含目录\u0026quot;中填写$(SolutionDir)gdal\\include\n设置附加库目录 - 告知编译器.lib库文件的所在目录\n在\u0026quot;链接器\u0026rdquo;-\u0026ldquo;常规\u0026rdquo;-\u0026ldquo;附加库目录\u0026quot;中填写$(SolutionDir)gdal\\debug\\lib\n设置环境 - 告知编译器.dll库文件的所在目录\n在\u0026quot;调试\u0026rdquo;-\u0026ldquo;环境\u0026quot;中填写Path = $(SolutionDir)gdal\\debug\\bin\n设置附加依赖项 - 告知编译器要链接的库文件\n在\u0026quot;链接器\u0026rdquo;-\u0026ldquo;输入\u0026rdquo;-\u0026ldquo;附加依赖项\u0026quot;中填写gdald.lib\n最后点击确定，项目属性设置完毕。\n测试 在main.cpp文件中输入如下代码，注意要将第7行中的文件路径改成你自己的，第13行中的函数实参也要做相应的修改。\n#include \u0026lt;ogrsf_frmts.h\u0026gt; #include \u0026lt;iostream\u0026gt; using namespace std; int main() { GDALAllRegister();\t// 自动注册所有驱动，只能读不能写 GDALDataset* poDS = static_cast\u0026lt;GDALDataset*\u0026gt;(GDALOpenEx( \u0026#34;.",
+  "headline": "在Windows下搭建gdal C++开发环境",
+  "name": "在Windows下搭建gdal C\u002b\u002b开发环境",
+  "description": "前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中使用第三方库，首先需要进行以下步骤：\n获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：\n库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。\n搭建使用第三方库的C++开发环境的核心步骤是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。\n出于毕业要求的需要，我前段时间写了个软著，其中涉及到gdal库的使用。鉴于网上针对这个库的C++开发环境搭建的教程相对较少，以下是我在Windows下的搭建gdal C++开发环境时做的一个记录，希望能够帮到有需要的人。\n基于vcpkg的gdal库编译 vcpkg是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。\n下载vcpkg\n使用git-bash中执行以下命令，以下载vcpkg。\ngit clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上述命令中的网址，点击\u0026quot;Code\u0026quot;-\u0026ldquo;Download ZIP\u0026rdquo;，下载后解压即可。\n使用vcpkg进行gdal库编译\n在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。\n.\\vcpkg\\bootstrap-vcpkg.bat .\\vcpkg\\vcpkg install gdal:x64-windows 接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在我的电脑中，耗时42分钟。\n查看库文件和头文件\n进入vcpkg/installed/x64-windows\nbin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。\nVisual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。\n在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。\n在解决方案目录下新建一个名为\u0026quot;gdal\u0026quot;的文件夹 将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中 接下来我们正式开始进行项目属性设置（以Debug配置为例）\n设置附加包含目录 - 告知编译器头文件的所在目录\n在\u0026quot;C/C++\u0026quot;-\u0026ldquo;常规\u0026rdquo;-\u0026ldquo;附加包含目录\u0026quot;中填写$(SolutionDir)gdal\\include\n设置附加库目录 - 告知编译器.lib库文件的所在目录\n在\u0026quot;链接器\u0026rdquo;-\u0026ldquo;常规\u0026rdquo;-\u0026ldquo;附加库目录\u0026quot;中填写$(SolutionDir)gdal\\debug\\lib\n设置环境 - 告知编译器.dll库文件的所在目录\n在\u0026quot;调试\u0026rdquo;-\u0026ldquo;环境\u0026quot;中填写Path = $(SolutionDir)gdal\\debug\\bin\n设置附加依赖项 - 告知编译器要链接的库文件\n在\u0026quot;链接器\u0026rdquo;-\u0026ldquo;输入\u0026rdquo;-\u0026ldquo;附加依赖项\u0026quot;中填写gdald.lib\n最后点击确定，项目属性设置完毕。\n测试 在main.cpp文件中输入如下代码，注意要将第7行中的文件路径改成你自己的，第13行中的函数实参也要做相应的修改。\n#include \u0026lt;ogrsf_frmts.h\u0026gt; #include \u0026lt;iostream\u0026gt; using namespace std; int main() { GDALAllRegister();\t// 自动注册所有驱动，只能读不能写 GDALDataset* poDS = static_cast\u0026lt;GDALDataset*\u0026gt;(GDALOpenEx( \u0026#34;.",
   "keywords": [
     
   ],
-  "articleBody": "前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中使用第三方库，首先需要进行以下步骤：\n获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：\n库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。\n搭建使用第三方库的C++开发环境的核心步骤是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。\n出于毕业要求的需要，我前段时间写了个软著，其中涉及到gdal库的使用。鉴于网上针对这个库的C++开发环境搭建的教程相对较少，以下是我在Windows下的搭建gdal C++开发环境时做的一个记录，希望能够帮到有需要的人。\n基于vcpkg的gdal库编译 vcpkg是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。\n下载vcpkg\n使用git-bash中执行以下命令，以下载vcpkg。\ngit clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上述命令中的网址，点击\"Code\"-“Download ZIP”，下载后解压即可。\n使用vcpkg进行gdal库编译\n在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。\n.\\vcpkg\\bootstrap-vcpkg.bat .\\vcpkg\\vcpkg install gdal:x64-windows 接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在我的电脑中，耗时42分钟。\n查看库文件和头文件\n进入vcpkg/installed/x64-windows\nbin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。\nVisual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。\n在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。\n在解决方案目录下新建一个名为\"gdal\"的文件夹\n将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中\n接下来我们正式开始进行项目属性设置（以Debug配置为例）\n设置附加包含目录 - 告知编译器头文件的所在目录\n在\"C/C++\"-“常规”-“附加包含目录\"中填写$(SolutionDir)gdal\\include\n设置附加库目录 - 告知编译器.lib库文件的所在目录\n在\"链接器”-“常规”-“附加库目录\"中填写$(SolutionDir)gdal\\debug\\lib\n设置环境 - 告知编译器.dll库文件的所在目录\n在\"调试”-“环境\"中填写Path = $(SolutionDir)gdal\\debug\\bin\n设置附加依赖项 - 告知编译器要链接的库文件\n在\"链接器”-“输入”-“附加依赖项\"中填写gdald.lib\n最后点击确定，项目属性设置完毕。\n测试 在main.cpp文件中输入如下代码，注意要将第7行中的文件路径改成你自己的，第13行中的函数实参也要做相应的修改。\n#include #include using namespace std; int main() { GDALAllRegister();\t// 自动注册所有驱动，只能读不能写 GDALDataset* poDS = static_cast\u003cGDALDataset*\u003e(GDALOpenEx( \"./data/point.shp\", GDAL_OF_VECTOR, nullptr, nullptr, nullptr));\t// 创建Dataset if (poDS == nullptr) { cout \u003c\u003c \"open failed.\" \u003c\u003c endl; exit(1); } OGRLayer* poLayer = poDS-\u003eGetLayerByName(\"point\");\t// 获取Layer，shapefile格式的LayerName就是文件名 OGRFeatureDefn* poFDefn = poLayer-\u003eGetLayerDefn();\t// 获取Layer的定义（包含Geometry和Field的定义） poLayer-\u003eResetReading();\t// 重置游标 OGRFeature* poFeature; while ((poFeature = poLayer-\u003eGetNextFeature()) != nullptr) {\t// 输出Layer中所有Feature的字段值 for (int iField = 0; iField \u003c poFDefn-\u003eGetFieldCount(); ++iField) { OGRFieldDefn* poFieldDefn = poFDefn-\u003eGetFieldDefn(iField); switch (poFieldDefn-\u003eGetType()) { case OFTInteger: printf(\"%d,\", poFeature-\u003eGetFieldAsInteger(iField)); break; case OFTInteger64: printf(CPL_FRMT_GIB \",\", poFeature-\u003eGetFieldAsInteger64(iField)); break; case OFTReal: printf(\"%.3f,\", poFeature-\u003eGetFieldAsDouble(iField)); break; case OFTString: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; default: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; } } cout \u003c\u003c endl; OGRFeature::DestroyFeature(poFeature);\t// GetNextFeature()返回的是一个对象的拷贝，需要自行销毁 } return 0; } 点击“开始调试”，不出意外的话，程序可以正常运行。\n但是，控制台首行会提示\"Cannot find proj.db”。所谓的\"proj.db\"实际存放在vcpkg\\installed\\x64-windows\\share\\proj中，我们可以使用以下两种方式让程序找到它。\n利用名为\"PROJ_LIB\"的环境变量，指明\"proj.db\"所在目录 将\"proj.db\"拷贝到项目目录以及可执行文件所在目录 （完）\n",
+  "articleBody": "前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中使用第三方库，首先需要进行以下步骤：\n获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：\n库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。\n搭建使用第三方库的C++开发环境的核心步骤是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。\n出于毕业要求的需要，我前段时间写了个软著，其中涉及到gdal库的使用。鉴于网上针对这个库的C++开发环境搭建的教程相对较少，以下是我在Windows下的搭建gdal C++开发环境时做的一个记录，希望能够帮到有需要的人。\n基于vcpkg的gdal库编译 vcpkg是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。\n下载vcpkg\n使用git-bash中执行以下命令，以下载vcpkg。\ngit clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上述命令中的网址，点击\"Code\"-“Download ZIP”，下载后解压即可。\n使用vcpkg进行gdal库编译\n在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。\n.\\vcpkg\\bootstrap-vcpkg.bat .\\vcpkg\\vcpkg install gdal:x64-windows 接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在我的电脑中，耗时42分钟。\n查看库文件和头文件\n进入vcpkg/installed/x64-windows\nbin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。\nVisual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。\n在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。\n在解决方案目录下新建一个名为\"gdal\"的文件夹 将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中 接下来我们正式开始进行项目属性设置（以Debug配置为例）\n设置附加包含目录 - 告知编译器头文件的所在目录\n在\"C/C++\"-“常规”-“附加包含目录\"中填写$(SolutionDir)gdal\\include\n设置附加库目录 - 告知编译器.lib库文件的所在目录\n在\"链接器”-“常规”-“附加库目录\"中填写$(SolutionDir)gdal\\debug\\lib\n设置环境 - 告知编译器.dll库文件的所在目录\n在\"调试”-“环境\"中填写Path = $(SolutionDir)gdal\\debug\\bin\n设置附加依赖项 - 告知编译器要链接的库文件\n在\"链接器”-“输入”-“附加依赖项\"中填写gdald.lib\n最后点击确定，项目属性设置完毕。\n测试 在main.cpp文件中输入如下代码，注意要将第7行中的文件路径改成你自己的，第13行中的函数实参也要做相应的修改。\n#include #include using namespace std; int main() { GDALAllRegister();\t// 自动注册所有驱动，只能读不能写 GDALDataset* poDS = static_cast\u003cGDALDataset*\u003e(GDALOpenEx( \"./data/point.shp\", GDAL_OF_VECTOR, nullptr, nullptr, nullptr));\t// 创建Dataset if (poDS == nullptr) { cout \u003c\u003c \"open failed.\" \u003c\u003c endl; exit(1); } OGRLayer* poLayer = poDS-\u003eGetLayerByName(\"point\");\t// 获取Layer，shapefile格式的LayerName就是文件名 OGRFeatureDefn* poFDefn = poLayer-\u003eGetLayerDefn();\t// 获取Layer的定义（包含Geometry和Field的定义） poLayer-\u003eResetReading();\t// 重置游标 OGRFeature* poFeature; while ((poFeature = poLayer-\u003eGetNextFeature()) != nullptr) {\t// 输出Layer中所有Feature的字段值 for (int iField = 0; iField \u003c poFDefn-\u003eGetFieldCount(); ++iField) { OGRFieldDefn* poFieldDefn = poFDefn-\u003eGetFieldDefn(iField); switch (poFieldDefn-\u003eGetType()) { case OFTInteger: printf(\"%d,\", poFeature-\u003eGetFieldAsInteger(iField)); break; case OFTInteger64: printf(CPL_FRMT_GIB \",\", poFeature-\u003eGetFieldAsInteger64(iField)); break; case OFTReal: printf(\"%.3f,\", poFeature-\u003eGetFieldAsDouble(iField)); break; case OFTString: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; default: printf(\"%s,\", poFeature-\u003eGetFieldAsString(iField)); break; } } cout \u003c\u003c endl; OGRFeature::DestroyFeature(poFeature);\t// GetNextFeature()返回的是一个对象的拷贝，需要自行销毁 } return 0; } 点击“开始调试”，不出意外的话，程序可以正常运行。\n但是，控制台首行会提示\"Cannot find proj.db”。所谓的\"proj.db\"实际存放在vcpkg\\installed\\x64-windows\\share\\proj中，我们可以使用以下两种方式让程序找到它。\n利用名为\"PROJ_LIB\"的环境变量，指明\"proj.db\"所在目录\n将\"proj.db\"拷贝到项目目录以及可执行文件所在目录\n（完）\n",
   "wordCount" : "188",
   "inLanguage": "zh",
   "datePublished": "2024-02-17T02:17:18+08:00",
@@ -282,7 +276,7 @@ Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空
   <header class="post-header">
     
     <h1 class="post-title entry-hint-parent">
-      gdal C&#43;&#43;开发环境搭建
+      在Windows下搭建gdal C&#43;&#43;开发环境
     </h1>
     <div class="post-meta"><span title='2024-02-17 02:17:18 +0800 CST'>2024年2月17日</span>&nbsp;·&nbsp;Cukoo&nbsp;|&nbsp;<a href="https://github.com/Cukoo-Li/Cukoo-Li.github.io/tree/main/content/posts/gdal_C&#43;&#43;%e5%bc%80%e5%8f%91%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba/index.zh.md" rel="noopener noreferrer" target="_blank">提交修改意见</a>
 
@@ -364,18 +358,16 @@ Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空
 <p><img loading="lazy" src="images/image-20240216164402466-17081075063795.png" alt="image-20240216164402466"  />
 </p>
 <p>在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。</p>
-<ol>
-<li>
-<p>在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹</p>
+<ul>
+<li>在解决方案目录下新建一个名为&quot;gdal&quot;的文件夹</li>
+</ul>
 <p><img loading="lazy" src="images/image-20240216170951117-17081075063806.png" alt="image-20240216170951117"  />
 </p>
-</li>
-<li>
-<p>将<code>vcpkg/installed/x64-windows</code>下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中</p>
+<ul>
+<li>将<code>vcpkg/installed/x64-windows</code>下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中</li>
+</ul>
 <p><img loading="lazy" src="images/image-20240216171248383-17081075063807.png" alt="image-20240216171248383"  />
 </p>
-</li>
-</ol>
 <p>接下来我们正式开始进行项目属性设置（以Debug配置为例）</p>
 <ul>
 <li>
@@ -452,10 +444,14 @@ Visual Studio项目属性设置 打开Visual Studio，创建一个C&#43;&#43;空
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>点击“开始调试”，不出意外的话，程序可以正常运行。</p>
 <p>但是，控制台首行会提示&quot;Cannot find proj.db&rdquo;。所谓的&quot;proj.db&quot;实际存放在<code>vcpkg\installed\x64-windows\share\proj</code>中，我们可以使用以下两种方式让程序找到它。</p>
-<ol>
-<li>利用名为&quot;PROJ_LIB&quot;的环境变量，指明&quot;proj.db&quot;所在目录</li>
-<li>将&quot;proj.db&quot;拷贝到项目目录以及可执行文件所在目录</li>
-</ol>
+<ul>
+<li>
+<p>利用名为&quot;PROJ_LIB&quot;的环境变量，指明&quot;proj.db&quot;所在目录</p>
+</li>
+<li>
+<p>将&quot;proj.db&quot;拷贝到项目目录以及可执行文件所在目录</p>
+</li>
+</ul>
 <p>（完）</p>
 
 
