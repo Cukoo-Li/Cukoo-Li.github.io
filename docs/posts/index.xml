@@ -11,8 +11,26 @@
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sat, 17 Feb 2024 02:17:18 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 26 Feb 2024 16:32:19 +0800</lastBuildDate>
     <atom:link href="https://cukoohhh.cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常见的内部排序算法总结</title>
+      <link>https://cukoohhh.cn/posts/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E9%83%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Mon, 26 Feb 2024 16:32:19 +0800</pubDate>
+      <guid>https://cukoohhh.cn/posts/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E9%83%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</guid>
+      <description>内部排序算法是面试中的常考点，其中快速排序和归并排序是重点。
+以下是我对常见的内部排序算法的简单总结，仅供自己复习之用，不涉及详细的算法讲解。
+插入排序 插入排序是一种简单直观的排序方法，其基本思想是每次将一个待排序的元素按其关键字大小插入到前面已排好序的子表中，直到全部元素插入完成。
+由插入排序的思想可以引申出三个重要的排序算法：直接插入排序、折半插入排序、希尔排序。
+直接插入排序 算法思想
+初始时将第一个元素视为已排好序的子表，然后依次将后面的元素插入到已排好序的子表中。
+算法实现
+void StraightInsertionSort(vector&amp;lt;int&amp;gt;&amp;amp; nums) { // 将各元素插入到前面排好序的子表中 for (int i = 1; i &amp;lt; nums.size(); ++i) { int temp = nums[i]; int j; // 前面排好序的子表中比待插入元素大的都要向后挪一个位置 for (j = i - 1; j &amp;gt;= 0 &amp;amp;&amp;amp; nums[j] &amp;gt; temp; --j) nums[j + 1] = nums[j]; // 将待插入元素复制到插入位置 nums[j + 1] = temp; } } 算法分析
+空间复杂度$O(1)$ 时间复杂度$O(n^2)$ 稳定性：稳定 折半插入排序 算法思想
+当排序表是顺序表时，可以对直接插入排序算法做如下改进：使用折半查找来确定待插入位置，然后再统一地向后移动元素。
+算法实现
+void BinaryInsertionSort(vector&amp;lt;int&amp;gt;&amp;amp; nums) { for (int i = 1; i &amp;lt; nums.</description>
+    </item>
     <item>
       <title>在Windows下搭建gdal C&#43;&#43;开发环境</title>
       <link>https://cukoohhh.cn/posts/gdal_c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
