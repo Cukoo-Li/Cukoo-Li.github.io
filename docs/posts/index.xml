@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>文章 on Cukoo&#39;s Blog</title>
+    <link>https://cukoohhh.cn/posts/</link>
+    <description>Recent content in 文章 on Cukoo&#39;s Blog</description>
+    <image>
+      <title>Cukoo&#39;s Blog</title>
+      <url>https://cukoohhh.cn/images/papermod-cover.png</url>
+      <link>https://cukoohhh.cn/images/papermod-cover.png</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Mon, 26 Feb 2024 16:32:19 +0800</lastBuildDate>
+    <atom:link href="https://cukoohhh.cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常见的内部排序算法总结</title>
+      <link>https://cukoohhh.cn/posts/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E9%83%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Mon, 26 Feb 2024 16:32:19 +0800</pubDate>
+      <guid>https://cukoohhh.cn/posts/%E5%B8%B8%E8%A7%81%E7%9A%84%E5%86%85%E9%83%A8%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/</guid>
+      <description>内部排序算法是面试中的常考点，其中快速排序和归并排序是重点。
+以下是我对常见的内部排序算法的简单总结，仅供自己复习之用，不涉及详细的算法讲解。
+插入排序 插入排序是一种简单直观的排序方法，其基本思想是每次将一个待排序的元素按其关键字大小插入到前面已排好序的子表中，直到全部元素插入完成。
+由插入排序的思想可以引申出三个重要的排序算法：直接插入排序、折半插入排序、希尔排序。
+直接插入排序 算法思想
+初始时将第一个元素视为已排好序的子表，然后依次将后面的元素插入到已排好序的子表中。
+算法实现
+void StraightInsertionSort(vector&amp;lt;int&amp;gt;&amp;amp; nums) { // 将各元素插入到前面排好序的子表中 for (int i = 1; i &amp;lt; nums.size(); ++i) { int temp = nums[i]; int j; // 前面排好序的子表中比待插入元素大的都要向后挪一个位置 for (j = i - 1; j &amp;gt;= 0 &amp;amp;&amp;amp; nums[j] &amp;gt; temp; --j) nums[j + 1] = nums[j]; // 将待插入元素复制到插入位置 nums[j + 1] = temp; } } 算法分析
+空间复杂度$O(1)$ 时间复杂度$O(n^2)$ 稳定性：稳定 折半插入排序 算法思想
+当排序表是顺序表时，可以对直接插入排序算法做如下改进：使用折半查找来确定待插入位置，然后再统一地向后移动元素。
+算法实现
+void BinaryInsertionSort(vector&amp;lt;int&amp;gt;&amp;amp; nums) { for (int i = 1; i &amp;lt; nums.</description>
+    </item>
+    <item>
+      <title>在Windows下搭建gdal C&#43;&#43;开发环境</title>
+      <link>https://cukoohhh.cn/posts/gdal_c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
+      <pubDate>Sat, 17 Feb 2024 02:17:18 +0800</pubDate>
+      <guid>https://cukoohhh.cn/posts/gdal_c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
+      <description>前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中使用第三方库，首先需要进行以下步骤：
+获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：
+库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。
+搭建使用第三方库的C++开发环境的核心步骤是固定的，也就是上述提到的4个步骤，但具体操作因平台而异。
+出于毕业要求的需要，我前段时间写了个软著，其中涉及到gdal库的使用。鉴于网上针对这个库的C++开发环境搭建的教程相对较少，以下是我在Windows下的搭建gdal C++开发环境时做的一个记录，希望能够帮到有需要的人。
+基于vcpkg的gdal库编译 vcpkg是微软推出的开源的C/C++库管理器，它能够自动为我们处理库编译所需的各种依赖关系，就像是Python中的miniconda。
+下载vcpkg
+使用git-bash中执行以下命令，以下载vcpkg。
+git clone https://github.com/microsoft/vcpkg.git 如果你没有git，打开上述命令中的网址，点击&amp;quot;Code&amp;quot;-&amp;ldquo;Download ZIP&amp;rdquo;，下载后解压即可。
+使用vcpkg进行gdal库编译
+在vcpkg文件夹的上级目录中，使用命令提示符(cmd)依次执行以下命令。
+.\vcpkg\bootstrap-vcpkg.bat .\vcpkg\vcpkg install gdal:x64-windows 接下来，可以喝杯茶、摸会儿鱼，等待编译完成。编译耗时因电脑性能而异，在我的电脑中，耗时42分钟。
+查看库文件和头文件
+进入vcpkg/installed/x64-windows
+bin和lib文件夹中分别存放着适用于Relese模式下的动态库文件(.dll)和静态库（也可能是动态库的导入库）文件(.lib) debug中的bin和lib文件夹分别存放着适用于Debug模式下的动态库文件(.dll)和静态库（也可能是动态库的导入库）文件(.lib) include文件夹中存放着头文件 以上就是基于vcpkg进行gdal库编译的操作过程，本文没有对相关命令进行讲解，更多详细信息请参考vcpkg的GitHub仓库中的README.md。
+Visual Studio项目属性设置 打开Visual Studio，创建一个C++空项目，在项目中添加一个.cpp文件。随后，在项目右键菜单中点击“属性”，将弹出如下图所示的“[项目名]属性页”。
+在设置项目属性之前，我们可以先将库文件和头文件放到项目文件夹中，这样在后续的项目设置中，就可以尽量使用相对路径。这样做的好处是，当我们将整个项目打包，放到其他电脑中打开时，就不用修改项目属性了。
+在解决方案目录下新建一个名为&amp;quot;gdal&amp;quot;的文件夹 将vcpkg/installed/x64-windows下的bin、debug、include、lib文件夹拷贝至刚刚新建的gdal文件夹中 接下来我们正式开始进行项目属性设置（以Debug配置为例）
+设置附加包含目录 - 告知编译器头文件的所在目录
+在&amp;quot;C/C++&amp;quot;-&amp;ldquo;常规&amp;rdquo;-&amp;ldquo;附加包含目录&amp;quot;中填写$(SolutionDir)gdal\include
+设置附加库目录 - 告知编译器.lib库文件的所在目录
+在&amp;quot;链接器&amp;rdquo;-&amp;ldquo;常规&amp;rdquo;-&amp;ldquo;附加库目录&amp;quot;中填写$(SolutionDir)gdal\debug\lib
+设置环境 - 告知编译器.dll库文件的所在目录
+在&amp;quot;调试&amp;rdquo;-&amp;ldquo;环境&amp;quot;中填写Path = $(SolutionDir)gdal\debug\bin
+设置附加依赖项 - 告知编译器要链接的库文件
+在&amp;quot;链接器&amp;rdquo;-&amp;ldquo;输入&amp;rdquo;-&amp;ldquo;附加依赖项&amp;quot;中填写gdald.lib
+最后点击确定，项目属性设置完毕。
+测试 在main.cpp文件中输入如下代码，注意要将第7行中的文件路径改成你自己的，第13行中的函数实参也要做相应的修改。
+#include &amp;lt;ogrsf_frmts.h&amp;gt; #include &amp;lt;iostream&amp;gt; using namespace std; int main() { GDALAllRegister();	// 自动注册所有驱动，只能读不能写 GDALDataset* poDS = static_cast&amp;lt;GDALDataset*&amp;gt;(GDALOpenEx( &amp;#34;.</description>
+    </item>
+  </channel>
+</rss>
