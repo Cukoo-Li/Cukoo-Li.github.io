@@ -295,9 +295,20 @@ date = 2024-02-26T16:32:19+08:00
 - 算法实现
 
   ```cpp
+  vector<int> temp;
+  void MergeSort(vector<int>& nums, int left, int right) {
+      temp.resize(nums.size(), 0);
+      if (left < right) {
+          int mid = left + (right - left) / 2;  // 从中间划分
+          MergeSort(nums, left, mid);       // 对左半部分进行归并排序
+          MergeSort(nums, mid + 1, right);  // 对右半部分进行归并排序
+          Merge(nums, left, mid, right);    // 归并
+      }
+  }
   // [left, mid]和[mid + 1, right]各自有序，将二者归并
   void Merge(vector<int>& nums, int left, int mid, int right) {
-      vector<int> temp(nums);  // 备份
+      // 将区间内nums的元素拷贝到temp中
+      copy(nums.begin() + left, nums.begin() + right + 1, temp.begin() + left);
       // 三指针，依次取较小值
       int i, j, k;
       for (i = left, j = mid + 1, k = left; i <= mid && j <= right; ++k) {
@@ -313,14 +324,6 @@ date = 2024-02-26T16:32:19+08:00
           nums[k++] = temp[j++];
   }
   
-  void MergeSort(vector<int>& nums, int left, int right) {
-      if (left < right) {
-          int mid = left + (right - left) / 2;  // 从中间划分
-          MergeSort(nums, left, mid);       // 对左半部分进行归并排序
-          MergeSort(nums, mid + 1, right);  // 对右半部分进行归并排序
-          Merge(nums, left, mid, right);    // 归并
-      }
-  }
   ```
 
 - 算法分析
