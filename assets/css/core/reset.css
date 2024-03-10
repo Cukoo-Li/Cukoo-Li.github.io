@@ -3,6 +3,8 @@
     src: url("/fonts/JetBrainsMonoNL-Regular.ttf");
     font-family: "HarmonyOS Sans SC";
     src: url("/fonts/HarmonyOS_Sans_SC_Regular.ttf");
+    font-family: "Sarasa Nerd";
+    src: url("./fonts/Sarasa-Mono-SC-Nerd.ttf");
 }
 
 
@@ -32,7 +34,7 @@ h6 {
 }
 
 body {
-    font-family: "HarmonyOS Sans SC";
+    font-family: "Sarasa Nerd";
     font-size: 18px;
     line-height: 1.6;
     word-break: break-word;
