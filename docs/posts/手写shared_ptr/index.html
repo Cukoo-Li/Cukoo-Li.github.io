@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>手写shared_ptr | Cukoo&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="手写shared_ptr是面试的常考点，提前准备一下吧。
+shared_ptr的关键特性 首先明确shared_ptr的关键特性：
+允许多个shared_ptr指向同一个对象 每个shared_ptr都有一个关联的引用计数，用于记录总共有多少个shared_ptr指向相同的对象 一旦一个shared_ptr所关联的引用计数变为0，它就会自动释放自己所管理的对象 代码思路 显然，最关键的就是要实现引用计数这个机制，大致思路如下：
+在堆中创建一个整型对象作为引用计数 在拷贝或赋值时修改引用计数 在析构函数中递减引用计数，并考察它是否变为0，如果变为0，则释放所指向的对象以及引用计数对象 代码实现 #include &lt;iostream&gt; template &lt;typename T&gt; class TinySharedPtr { public: // 构造函数 explicit TinySharedPtr(T* ptr = nullptr) : ptr_(ptr) { if (ptr_) count_ = new int(1); } // 拷贝构造函数 TinySharedPtr(const TinySharedPtr&amp; other) : ptr_(other.ptr_), count_(other.count_) { if (count_) &#43;&#43;*count_; } // 拷贝赋值运算符 TinySharedPtr&amp; operator=(TinySharedPtr other) { std::swap(ptr_, other.ptr_); std::swap(count_, other.count_); return *this; } // 析构函数 ~TinySharedPtr() { if (count_ &amp;&amp; --(*count_) == 0) { delete ptr_; delete count_; } } T* get() { return ptr_; } T* operator-&gt;() { return ptr_; } T&amp; operator*() { return *ptr_; } int use_count() { return count_ ?">
+<meta name="author" content="Cukoo">
+<link rel="canonical" href="https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared_ptr/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0f91388456292b8d5df36639357816452d5d8f3af6953af64a39ec0a8e2ca9c6.css" integrity="sha256-D5E4hFYpK41d82Y5NXgWRS1djzr2lTr2SjnsCo4sqcY=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://cukoohhh.cn/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cukoohhh.cn/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cukoohhh.cn/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://cukoohhh.cn/apple-touch-icon.png">
+<link rel="mask-icon" href="https://cukoohhh.cn/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="手写shared_ptr" />
+<meta property="og:description" content="手写shared_ptr是面试的常考点，提前准备一下吧。
+shared_ptr的关键特性 首先明确shared_ptr的关键特性：
+允许多个shared_ptr指向同一个对象 每个shared_ptr都有一个关联的引用计数，用于记录总共有多少个shared_ptr指向相同的对象 一旦一个shared_ptr所关联的引用计数变为0，它就会自动释放自己所管理的对象 代码思路 显然，最关键的就是要实现引用计数这个机制，大致思路如下：
+在堆中创建一个整型对象作为引用计数 在拷贝或赋值时修改引用计数 在析构函数中递减引用计数，并考察它是否变为0，如果变为0，则释放所指向的对象以及引用计数对象 代码实现 #include &lt;iostream&gt; template &lt;typename T&gt; class TinySharedPtr { public: // 构造函数 explicit TinySharedPtr(T* ptr = nullptr) : ptr_(ptr) { if (ptr_) count_ = new int(1); } // 拷贝构造函数 TinySharedPtr(const TinySharedPtr&amp; other) : ptr_(other.ptr_), count_(other.count_) { if (count_) &#43;&#43;*count_; } // 拷贝赋值运算符 TinySharedPtr&amp; operator=(TinySharedPtr other) { std::swap(ptr_, other.ptr_); std::swap(count_, other.count_); return *this; } // 析构函数 ~TinySharedPtr() { if (count_ &amp;&amp; --(*count_) == 0) { delete ptr_; delete count_; } } T* get() { return ptr_; } T* operator-&gt;() { return ptr_; } T&amp; operator*() { return *ptr_; } int use_count() { return count_ ?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared_ptr/" /><meta property="og:image" content="https://cukoohhh.cn/images/papermod-cover.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-11T23:07:08+08:00" />
+<meta property="article:modified_time" content="2024-03-11T23:07:08+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cukoohhh.cn/images/papermod-cover.png"/>
+
+<meta name="twitter:title" content="手写shared_ptr"/>
+<meta name="twitter:description" content="手写shared_ptr是面试的常考点，提前准备一下吧。
+shared_ptr的关键特性 首先明确shared_ptr的关键特性：
+允许多个shared_ptr指向同一个对象 每个shared_ptr都有一个关联的引用计数，用于记录总共有多少个shared_ptr指向相同的对象 一旦一个shared_ptr所关联的引用计数变为0，它就会自动释放自己所管理的对象 代码思路 显然，最关键的就是要实现引用计数这个机制，大致思路如下：
+在堆中创建一个整型对象作为引用计数 在拷贝或赋值时修改引用计数 在析构函数中递减引用计数，并考察它是否变为0，如果变为0，则释放所指向的对象以及引用计数对象 代码实现 #include &lt;iostream&gt; template &lt;typename T&gt; class TinySharedPtr { public: // 构造函数 explicit TinySharedPtr(T* ptr = nullptr) : ptr_(ptr) { if (ptr_) count_ = new int(1); } // 拷贝构造函数 TinySharedPtr(const TinySharedPtr&amp; other) : ptr_(other.ptr_), count_(other.count_) { if (count_) &#43;&#43;*count_; } // 拷贝赋值运算符 TinySharedPtr&amp; operator=(TinySharedPtr other) { std::swap(ptr_, other.ptr_); std::swap(count_, other.count_); return *this; } // 析构函数 ~TinySharedPtr() { if (count_ &amp;&amp; --(*count_) == 0) { delete ptr_; delete count_; } } T* get() { return ptr_; } T* operator-&gt;() { return ptr_; } T&amp; operator*() { return *ptr_; } int use_count() { return count_ ?"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "文章",
+      "item": "https://cukoohhh.cn/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "手写shared_ptr",
+      "item": "https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared_ptr/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "手写shared_ptr",
+  "name": "手写shared_ptr",
+  "description": "手写shared_ptr是面试的常考点，提前准备一下吧。\nshared_ptr的关键特性 首先明确shared_ptr的关键特性：\n允许多个shared_ptr指向同一个对象 每个shared_ptr都有一个关联的引用计数，用于记录总共有多少个shared_ptr指向相同的对象 一旦一个shared_ptr所关联的引用计数变为0，它就会自动释放自己所管理的对象 代码思路 显然，最关键的就是要实现引用计数这个机制，大致思路如下：\n在堆中创建一个整型对象作为引用计数 在拷贝或赋值时修改引用计数 在析构函数中递减引用计数，并考察它是否变为0，如果变为0，则释放所指向的对象以及引用计数对象 代码实现 #include \u0026lt;iostream\u0026gt; template \u0026lt;typename T\u0026gt; class TinySharedPtr { public: // 构造函数 explicit TinySharedPtr(T* ptr = nullptr) : ptr_(ptr) { if (ptr_) count_ = new int(1); } // 拷贝构造函数 TinySharedPtr(const TinySharedPtr\u0026amp; other) : ptr_(other.ptr_), count_(other.count_) { if (count_) ++*count_; } // 拷贝赋值运算符 TinySharedPtr\u0026amp; operator=(TinySharedPtr other) { std::swap(ptr_, other.ptr_); std::swap(count_, other.count_); return *this; } // 析构函数 ~TinySharedPtr() { if (count_ \u0026amp;\u0026amp; --(*count_) == 0) { delete ptr_; delete count_; } } T* get() { return ptr_; } T* operator-\u0026gt;() { return ptr_; } T\u0026amp; operator*() { return *ptr_; } int use_count() { return count_ ?",
+  "keywords": [
+    
+  ],
+  "articleBody": "手写shared_ptr是面试的常考点，提前准备一下吧。\nshared_ptr的关键特性 首先明确shared_ptr的关键特性：\n允许多个shared_ptr指向同一个对象 每个shared_ptr都有一个关联的引用计数，用于记录总共有多少个shared_ptr指向相同的对象 一旦一个shared_ptr所关联的引用计数变为0，它就会自动释放自己所管理的对象 代码思路 显然，最关键的就是要实现引用计数这个机制，大致思路如下：\n在堆中创建一个整型对象作为引用计数 在拷贝或赋值时修改引用计数 在析构函数中递减引用计数，并考察它是否变为0，如果变为0，则释放所指向的对象以及引用计数对象 代码实现 #include template \u003ctypename T\u003e class TinySharedPtr { public: // 构造函数 explicit TinySharedPtr(T* ptr = nullptr) : ptr_(ptr) { if (ptr_) count_ = new int(1); } // 拷贝构造函数 TinySharedPtr(const TinySharedPtr\u0026 other) : ptr_(other.ptr_), count_(other.count_) { if (count_) ++*count_; } // 拷贝赋值运算符 TinySharedPtr\u0026 operator=(TinySharedPtr other) { std::swap(ptr_, other.ptr_); std::swap(count_, other.count_); return *this; } // 析构函数 ~TinySharedPtr() { if (count_ \u0026\u0026 --(*count_) == 0) { delete ptr_; delete count_; } } T* get() { return ptr_; } T* operator-\u003e() { return ptr_; } T\u0026 operator*() { return *ptr_; } int use_count() { return count_ ? *count_ : 0; } private: T* ptr_ = nullptr; int* count_ = nullptr; }; struct Cukoo { Cukoo() { puts(\"Cukoo()\"); } ~Cukoo() { puts(\"~Cukoo()\"); } int age = 24; }; int main() { TinySharedPtr\u003cCukoo\u003e sp0; std::cout \u003c\u003c \"sp0: \" \u003c\u003c sp0.use_count() \u003c\u003c '\\n'; { TinySharedPtr\u003cCukoo\u003e sp1(new Cukoo()); std::cout \u003c\u003c \"age: \" \u003c\u003c sp1-\u003eage \u003c\u003c '\\n'; std::cout \u003c\u003c \"sp1: \" \u003c\u003c sp1.use_count() \u003c\u003c '\\n'; TinySharedPtr\u003cCukoo\u003e sp2(sp1); std::cout \u003c\u003c \"sp2: \" \u003c\u003c sp2.use_count() \u003c\u003c '\\n'; sp0 = sp2; std::cout \u003c\u003c \"sp0: \" \u003c\u003c sp2.use_count() \u003c\u003c '\\n'; } std::cout \u003c\u003c \"sp0: \" \u003c\u003c sp0.use_count() \u003c\u003c '\\n'; return 0; } // sp0: 0 // Cukoo() // age: 24 // sp1: 1 // sp2: 2 // sp0: 3 // sp0: 1 // ~Cukoo() ",
+  "wordCount" : "223",
+  "inLanguage": "zh",
+  "datePublished": "2024-03-11T23:07:08+08:00",
+  "dateModified": "2024-03-11T23:07:08+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Cukoo"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared_ptr/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cukoo's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cukoohhh.cn/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://cukoohhh.cn/" accesskey="h" title="Cukoo&#39;s Blog (Alt + H)">Cukoo&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://cukoohhh.cn/posts" title="✍🏻文章">
+                    <span>✍🏻文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoohhh.cn/categories" title="🗃️分类">
+                    <span>🗃️分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoohhh.cn/about" title="ℹ️关于">
+                    <span>ℹ️关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoohhh.cn/search" title="🔍搜索">
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      手写shared_ptr
+    </h1>
+    <div class="post-meta"><span title='2024-03-11 23:07:08 +0800 CST'>2024年3月11日</span>&nbsp;·&nbsp;Cukoo&nbsp;|&nbsp;<a href="https://github.com/Cukoo-Li/Cukoo-Li.github.io/tree/main/content/posts/%e6%89%8b%e5%86%99shared_ptr/index.zh.md" rel="noopener noreferrer" target="_blank">提交修改意见</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#shared_ptr%e7%9a%84%e5%85%b3%e9%94%ae%e7%89%b9%e6%80%a7" aria-label="shared_ptr的关键特性">shared_ptr的关键特性</a></li>
+                <li>
+                    <a href="#%e4%bb%a3%e7%a0%81%e6%80%9d%e8%b7%af" aria-label="代码思路">代码思路</a></li>
+                <li>
+                    <a href="#%e4%bb%a3%e7%a0%81%e5%ae%9e%e7%8e%b0" aria-label="代码实现">代码实现</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>手写<code>shared_ptr</code>是面试的常考点，提前准备一下吧。</p>
+<h2 id="shared_ptr的关键特性">shared_ptr的关键特性<a hidden class="anchor" aria-hidden="true" href="#shared_ptr的关键特性">#</a></h2>
+<p>首先明确<code>shared_ptr</code>的关键特性：</p>
+<ul>
+<li>允许多个<code>shared_ptr</code>指向同一个对象</li>
+<li>每个<code>shared_ptr</code>都有一个关联的引用计数，用于记录总共有多少个<code>shared_ptr</code>指向相同的对象</li>
+<li>一旦一个<code>shared_ptr</code>所关联的引用计数变为0，它就会自动释放自己所管理的对象</li>
+</ul>
+<h2 id="代码思路">代码思路<a hidden class="anchor" aria-hidden="true" href="#代码思路">#</a></h2>
+<p>显然，最关键的就是要实现引用计数这个机制，大致思路如下：</p>
+<ul>
+<li>在堆中创建一个整型对象作为引用计数</li>
+<li>在拷贝或赋值时修改引用计数</li>
+<li>在析构函数中递减引用计数，并考察它是否变为0，如果变为0，则释放所指向的对象以及引用计数对象</li>
+</ul>
+<h2 id="代码实现">代码实现<a hidden class="anchor" aria-hidden="true" href="#代码实现">#</a></h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TinySharedPtr</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 构造函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">explicit</span> <span class="n">TinySharedPtr</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="o">:</span> <span class="n">ptr_</span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ptr_</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">count_</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 拷贝构造函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">TinySharedPtr</span><span class="p">(</span><span class="k">const</span> <span class="n">TinySharedPtr</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="o">:</span> <span class="n">ptr_</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">ptr_</span><span class="p">),</span> <span class="n">count_</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">count_</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++*</span><span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 拷贝赋值运算符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">TinySharedPtr</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">TinySharedPtr</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">ptr_</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">ptr_</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">count_</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">count_</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 析构函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">~</span><span class="n">TinySharedPtr</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span> <span class="o">&amp;&amp;</span> <span class="o">--</span><span class="p">(</span><span class="o">*</span><span class="n">count_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">ptr_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">T</span><span class="o">*</span> <span class="nf">get</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ptr_</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span><span class="o">*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ptr_</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="o">*</span><span class="n">ptr_</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">use_count</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">count_</span> <span class="o">?</span> <span class="o">*</span><span class="nl">count_</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   <span class="k">private</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span><span class="o">*</span> <span class="n">ptr_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span><span class="o">*</span> <span class="n">count_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Cukoo</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Cukoo</span><span class="p">()</span> <span class="p">{</span> <span class="n">puts</span><span class="p">(</span><span class="s">&#34;Cukoo()&#34;</span><span class="p">);</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">Cukoo</span><span class="p">()</span> <span class="p">{</span> <span class="n">puts</span><span class="p">(</span><span class="s">&#34;~Cukoo()&#34;</span><span class="p">);</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TinySharedPtr</span><span class="o">&lt;</span><span class="n">Cukoo</span><span class="o">&gt;</span> <span class="n">sp0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp0: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp0</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TinySharedPtr</span><span class="o">&lt;</span><span class="n">Cukoo</span><span class="o">&gt;</span> <span class="n">sp1</span><span class="p">(</span><span class="k">new</span> <span class="n">Cukoo</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;age: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp1</span><span class="o">-&gt;</span><span class="n">age</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp1: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp1</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">TinySharedPtr</span><span class="o">&lt;</span><span class="n">Cukoo</span><span class="o">&gt;</span> <span class="n">sp2</span><span class="p">(</span><span class="n">sp1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp2: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp2</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sp0</span> <span class="o">=</span> <span class="n">sp2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp0: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp2</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp0: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp0</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// sp0: 0
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Cukoo()
+</span></span></span><span class="line"><span class="cl"><span class="c1">// age: 24
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp1: 1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp2: 2
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp0: 3
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp0: 1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// ~Cukoo()
+</span></span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://cukoohhh.cn/">Cukoo&#39;s Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style></body>
+
+</html>
