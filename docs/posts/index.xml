@@ -43,9 +43,9 @@ void BinaryInsertionSort(vector&amp;lt;int&amp;gt;&amp;amp; nums) { for (int i =
     </item>
     <item>
       <title>gdal C&#43;&#43;开发环境搭建</title>
-      <link>https://cukoohhh.cn/posts/gdal_c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
+      <link>https://cukoohhh.cn/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
       <pubDate>Sat, 17 Feb 2024 02:17:18 +0800</pubDate>
-      <guid>https://cukoohhh.cn/posts/gdal_c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
+      <guid>https://cukoohhh.cn/posts/gdal-c&#43;&#43;%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
       <description>前言 在开发中，我们经常会使用到第三方库，以避免造轮子，从而提高开发效率。在C++中使用第三方库，首先需要进行以下步骤：
 获取库文件和头文件 告知编译器头文件的所在目录 告知编译器库文件的所在目录 告知编译器要链接的库文件 库文件的获取主要有两种方式：
 库厂商有提供库文件，自行选择所需版本下载即可 库厂商没有提供库文件，但开放了源代码，此时就需要自己根据源代码进行编译，得到所需的库文件 所有的库文件都提供有相应的头文件作为调用它的接口。换言之，我们在拿到库文件的同时，也拿到了头文件。
