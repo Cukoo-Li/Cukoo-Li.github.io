@@ -15,9 +15,9 @@
     <atom:link href="https://cukoohhh.cn/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>手写shared_ptr</title>
-      <link>https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared_ptr/</link>
+      <link>https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared-ptr/</link>
       <pubDate>Mon, 11 Mar 2024 23:07:08 +0800</pubDate>
-      <guid>https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared_ptr/</guid>
+      <guid>https://cukoohhh.cn/posts/%E6%89%8B%E5%86%99shared-ptr/</guid>
       <description>手写shared_ptr是面试的常考点，提前准备一下吧。
 shared_ptr的关键特性 首先明确shared_ptr的关键特性：
 允许多个shared_ptr指向同一个对象 每个shared_ptr都有一个关联的引用计数，用于记录总共有多少个shared_ptr指向相同的对象 一旦一个shared_ptr所关联的引用计数变为0，它就会自动释放自己所管理的对象 代码思路 显然，最关键的就是要实现引用计数这个机制，大致思路如下：
