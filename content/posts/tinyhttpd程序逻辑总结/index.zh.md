@@ -10,7 +10,7 @@ tinyhttpd是一个非常简易的HTTP服务器程序，适合Linux服务器编�
 ## 程序主要工作流程
 
 1. 服务器启动，在某个端口绑定httpd服务，等待HTTP请求（`main`建立监听socket）
-2. 收到一个HTTP请求时（监听socket被`accept`后得到一个连接socket），创建一个线程去处理（执行`accept_request`函数）
+2. 收到一个HTTP请求时（监听socket被`accept`后得到一个连接socket），对它进行处理（执行`accept_request`函数）
 3. 解析HTTP请求报文的请求行，从中提取出`method`和`url`，根据两者的内容执行相应的业务逻辑
    - 对于GET方法，解析`url`，获取客户所请求的文件路径`path`。如果`path`是一个目录，则追加`"index.html"`，表示访问主页。如果`path`不存在，则报错返回。否则，如果`path`存在且不是可执行文件，就将该文件封装成响应报文发送给客户（文件基本信息作为首部行，文件内容作为实体主体），跳到最后一步
    - 对于POST方法以及“GET一个可执行文件”，后续将执行cgi业务逻辑
