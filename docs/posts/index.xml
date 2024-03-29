@@ -11,8 +11,26 @@
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Wed, 20 Mar 2024 12:06:34 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 29 Mar 2024 19:39:32 +0800</lastBuildDate>
     <atom:link href="https://cukoohhh.cn/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>KMP算法</title>
+      <link>https://cukoohhh.cn/posts/kmp%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Fri, 29 Mar 2024 19:39:32 +0800</pubDate>
+      <guid>https://cukoohhh.cn/posts/kmp%E7%AE%97%E6%B3%95/</guid>
+      <description>KMP算法是著名的字符串匹配算法。所谓字符串匹配，其实就是子串（常称为模式串）的定位操作，它求的是模式串在主串中的位置。
+对朴素模式匹配算法的改进 对于字符串匹配问题，我们很容易想到暴力解法（即朴素模式匹配算法）：枚举主串中的每一个位置，考虑以其作为起点，与模式串中对应位置的元素进行匹配。一旦在某个位置匹配不上（失配），就考虑以下一个位置为起点，重新与模式串进行匹配，如此反复进行。
+很显然，朴素模式匹配算法的时间复杂度为$O(n×m)$。
+int strStr(string haystack, string needle) { for (int i = 0; i + needle.size() &amp;lt;= haystack.size(); ++i) { bool flag = true; for (int j = 0; j &amp;lt; needle.size(); ++j) { if (haystack[i + j] != needle[j]) { flag = false; break; } } if (flag) return i; } return -1; } 朴素模式匹配算法的思想真的很朴素——不管在什么位置，只要发生失配，都选择以主串起点的下一个位置作为新起点，与模式串从头开始匹配。但这真的有必要吗？换句话说，发生失配时，我们真的需要以下一个位置为起点从头再来吗？是否有更好的选择呢？肯定是有的，下面我们来分析一下。
+以下图为例，当我们在模式串下标为5的位置发生失配时，主串中对应于子串前面的部分（即主串下标为3到7的部分）的内容，我们是知道的。因为这些位置跟与模式串是匹配的。
+按照暴力解法，接下来的一轮匹配操作将如下图所示。我们可以把这一轮匹配操作分为两个部分：首先是与主串中已知部分的匹配（橙色部分），然后是与主串中未知部分匹配（绿色部分）。对于橙色部分，实际上就相当于拿着模式串中0到4子串(&amp;quot;abaab&amp;quot;)的长度为4的前缀(&amp;quot;abaa&amp;quot;)和长度为4的后缀(&amp;quot;baab&amp;quot;)进行匹配。但这个结果我们是可以事先计算好的，因为它只与模式串相关，而且模式串本身较短，计算量并不大。如果我们事先已经知道&amp;quot;abaab&amp;quot;长度为4的前后缀不相等，我们就完全没必要考虑以主串位置4为起点。
+同理，以主串位置5为起点也是没有必要的，因为&amp;quot;abaab&amp;quot;长度为3的前后缀并不相等。
+但以主串位置6为起点是有必要的，因为&amp;quot;abaab&amp;quot;长度为2的前后缀是相等的，都是&amp;quot;ab&amp;quot;。此时，我们应该从子串下标为2的位置开始匹配，如下图所示：
+从上述例子中，我们可以归纳出如下解决方案，它适用于在模式串各个位置发生失配的情况：
+当在模式串下标为j的位置与主串位置i发生失配时，指针j可以直接跳转到某一下标重新与主串的当前位置i进行比较，这个下标等于模式串中0到j - 1子串的最长相等前后缀长度。如下图所示：
+因此，我们只需要事先计算出模式串中0到j - 1子串的最长相等前后缀长度，就能省去朴素模式匹配算法中许多不必要的比较操作。这就是KMP算法的核心思想。
+KMP算法核心思想 KMP算法的核心思想可总结为如下两点：</description>
+    </item>
     <item>
       <title>tinyhttpd程序逻辑总结</title>
       <link>https://cukoohhh.cn/posts/tinyhttpd%E7%A8%8B%E5%BA%8F%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/</link>
