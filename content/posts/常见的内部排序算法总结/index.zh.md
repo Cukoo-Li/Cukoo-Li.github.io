@@ -153,26 +153,26 @@ date = 2024-02-26T16:32:19+08:00
   ```cpp
   void QuickSort(vector<int>& nums, int left, int right) {
       if (left < right) {  // 递归跳出的条件
-          int privot_index = Partition(nums, left, right);  // 划分
+          int pivot_index = Partition(nums, left, right);  // 划分
           // 分别对两个子表进行递归排序
-          QuickSort(nums, left, privot_index - 1);
-          QuickSort(nums, privot_index + 1, right);
+          QuickSort(nums, left, pivot_index - 1);
+          QuickSort(nums, pivot_index + 1, right);
       }
   }
   
   int Partition(vector<int>& nums, int left, int right) {
-      int privot = nums[left];  // 将第一个元素作为枢轴
+      int pivot = nums[left];  // 将第一个元素作为枢轴
       while (left < right) {    // 循环跳出条件
           // 将小于枢轴的元素移动到左边
-          while (left < right && nums[right] >= privot)
+          while (left < right && nums[right] >= pivot)
               --right;
           nums[left] = nums[right];
           // 将大于等于枢轴的元素移动到右边
-          while (left < right && nums[left] < privot)
+          while (left < right && nums[left] < pivot)
               ++left;
           nums[right] = nums[left];
       }
-      nums[left] = privot;  // 将枢轴元素放到最终位置
+      nums[left] = pivot;  // 将枢轴元素放到最终位置
       return left;
   }
   ```
