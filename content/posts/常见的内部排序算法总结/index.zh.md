@@ -83,9 +83,9 @@ date = 2024-02-26T16:32:19+08:00
 
 - 算法思想
 
-  直接插入排序算法的时间复杂度为O(n^2)，但若待排表为“正序”时，其时间复杂度可提高至O(n)，由此可见它更适用于基本有序的排序表和数据量不大的排序表。希尔排序正是基于这两点分析对直接插入排序进行改进而得来的，又称缩小增量排序。
+  直接插入排序算法的时间复杂度为$O(n^2)$，但若待排表为“正序”时，其时间复杂度可提高至$O(n)$，由此可见它更适用于基本有序的排序表和数据量不大的排序表。希尔排序正是基于这两点分析对直接插入排序进行改进而得来的，又称缩小增量排序。
 
-  希尔排序的基本思想是：先将待排序表分割成若干形如`{i, i+d, i+2d, ..., i+kd}`的“子表”，即把相隔某个“增量”的元素组成一个子表，对各个子表分别进行直接插入排序。逐步减少增量d，使排序表逐步呈现“基本有序”的情形，最终d=1，即对全体元素进行一次直接插入排序。
+  希尔排序的基本思想是：先将待排序表分割成若干形如`{i, i+d, i+2d, ..., i+kd}`的“子表”，即把相隔某个“增量”的元素组成一个子表，对各个子表分别进行直接插入排序。逐步减少增量`d`，使排序表逐步呈现“基本有序”的情形，最终`d = 1`，即对全体元素进行一次直接插入排序。
 
 - 算法实现
 
@@ -116,7 +116,7 @@ date = 2024-02-26T16:32:19+08:00
 
 - 算法思想
 
-  从后往前（或从前往后）两两比较相邻元素值，若为逆序，则交换它们。我们称这是一趟冒泡，每趟冒泡的结果会将最小的元素交换到待排序表的第一个位置。下一趟冒泡时，前一趟确定的最小元素（或最大元素）不再参与比较。这样最多做n-1趟就能完成排序。
+  从后往前（或从前往后）两两比较相邻元素值，若为逆序，则交换它们。我们称这是一趟冒泡，每趟冒泡的结果会将最小的元素交换到待排序表的第一个位置。下一趟冒泡时，前一趟确定的最小元素（或最大元素）不再参与比较。这样最多做`n-1`趟就能完成排序。
 
 - 算法实现
 
@@ -152,12 +152,12 @@ date = 2024-02-26T16:32:19+08:00
 
   ```cpp
   void QuickSort(vector<int>& nums, int left, int right) {
-      if (left < right) {  // 递归跳出的条件
-          int pivot_index = Partition(nums, left, right);  // 划分
-          // 分别对两个子表进行递归排序
-          QuickSort(nums, left, pivot_index - 1);
-          QuickSort(nums, pivot_index + 1, right);
-      }
+      if (left >= right)
+  				return;
+      int pivot_index = Partition(nums, left, right);  // 划分
+      // 分别对两个子表进行递归排序
+      QuickSort(nums, left, pivot_index - 1);
+      QuickSort(nums, pivot_index + 1, right);
   }
   
   int Partition(vector<int>& nums, int left, int right) {
@@ -179,7 +179,7 @@ date = 2024-02-26T16:32:19+08:00
 
 - 算法分析
 
-  - 空间复杂度$O(log_2n)$：快速排序的递归调用过程可以看成是一棵结点数为n的二叉树，空间复杂度取决于树的深度，平均空间复杂度与最好空间复杂度接近
+  - 空间复杂度$O(log_2n)$：快速排序的递归调用过程可以看成是一棵结点数为`n`的二叉树，空间复杂度取决于树的深度，平均空间复杂度与最好空间复杂度接近
   - 时间复杂度$O(nlog_2n)$：在树的每一层中的时间复杂度不超过$O(n)$，时间复杂度为$O(n×树的深度)$
   - 稳定性：不稳定
 
@@ -294,25 +294,24 @@ date = 2024-02-26T16:32:19+08:00
 
 - 算法思想
 
-  将待排序表视为n个只含1个元素的有序子表，然后两两归并，合并成一个更大的有序表，直到合并成一个长度为n的有序表为止。
+  将待排序表视为`n`个只含1个元素的有序子表，然后两两归并，合并成一个更大的有序表，直到合并成一个长度为`n`的有序表为止。
 
 - 算法实现
 
   ```cpp
-  vector<int> temp;
   void MergeSort(vector<int>& nums, int left, int right) {
-      temp.resize(nums.size(), 0);
-      if (left < right) {
-          int mid = left + (right - left) / 2;  // 从中间划分
-          MergeSort(nums, left, mid);       // 对左半部分进行归并排序
-          MergeSort(nums, mid + 1, right);  // 对右半部分进行归并排序
-          Merge(nums, left, mid, right);    // 归并
-      }
+      if (left >= right)
+          return;
+      int mid = left + (right - left) / 2;  // 从中间划分
+      MergeSort(nums, left, mid);       // 对左半部分进行归并排序
+      MergeSort(nums, mid + 1, right);  // 对右半部分进行归并排序
+      Merge(nums, left, mid, right);    // 归并
   }
-
+  
   // [left, mid]和[mid + 1, right]各自有序，将二者归并
   void Merge(vector<int>& nums, int left, int mid, int right) {
       // 将区间内nums的元素拷贝到temp中
+      vector<int> temp(nums.size(), 0);
       copy(nums.begin() + left, nums.begin() + right + 1, temp.begin() + left);
       // 三指针，依次取较小值
       int i, j, k;
@@ -330,7 +329,7 @@ date = 2024-02-26T16:32:19+08:00
   }
   
   ```
-
+  
 - 算法分析
 
   - 空间复杂度$O(n)$：辅助数组所需空间为$O(n)$。归并排序的递归调用过程可以看成是一棵最后一层结点数为n的二叉树，递归调用栈所需空间$O(log_2n)$
