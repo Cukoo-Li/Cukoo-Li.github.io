@@ -123,15 +123,15 @@ date = 2024-02-26T16:32:19+08:00
   ```cpp
   void BubbleSort(vector<int>& nums) {
       for (int i = 0; i < nums.size() - 1; ++i) {
-          bool swaped = false;  // 记录本趟冒泡是否发生过交换
+          bool swapped = false;  // 记录本趟冒泡是否发生过交换
           for (int j = nums.size() - 1; j > i; --j) {
               if (nums[j - 1] > nums[j]) {
                   swap(nums[j - 1], nums[j]);
-                  swaped = true;
+                  swapped = true;
               }
           }
-          if (swaped == false)  // 没有发生过交换，说明已经有序
-              return;
+          if (swapped == false)  // 没有发生过交换，说明已经有序
+              break;
       }
   }
   ```
@@ -314,12 +314,14 @@ date = 2024-02-26T16:32:19+08:00
       vector<int> temp(nums.size(), 0);
       copy(nums.begin() + left, nums.begin() + right + 1, temp.begin() + left);
       // 三指针，依次取较小值
-      int i, j, k;
-      for (i = left, j = mid + 1, k = left; i <= mid && j <= right; ++k) {
+      int i = left;
+      int j = mid + 1;
+      int k = left
+      while (i <= mid && j <= right) {
           if (temp[i] <= temp[j])
-              nums[k] = temp[i++];
+              nums[k++] = temp[i++];
           else
-              nums[k] = temp[j++];
+              nums[k++] = temp[j++];
       }
       // 将较长有序表中剩余的元素依次取完
       while (i <= mid)
