@@ -59,10 +59,10 @@ date = 2024-02-26T16:32:19+08:00
           int right = i - 1;
           while (left <= right) {
               int mid = left + (right - left) / 2;
-              if (temp < nums[mid])
-                  right = mid - 1;
-              else
+              if (nums[mid] <= temp)
                   left = mid + 1;
+              else
+                  right = mid - 1;
           }
           // 从插入位置开始往后的元素都要向后挪一个位置
           for (int j = i - 1; j >= left; --j)
