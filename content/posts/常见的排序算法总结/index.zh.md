@@ -1,9 +1,8 @@
 +++
-title = '常见的内部排序算法总结'
+title = '常见的排序算法总结'
 date = 2024-02-26T16:32:19+08:00
-+++
 
-内部排序算法是面试中的常考点，其中快速排序和归并排序是重点。
++++
 
 以下是我对常见的内部排序算法的简单总结，仅供自己复习之用，不涉及详细的算法讲解。
 
@@ -151,28 +150,29 @@ date = 2024-02-26T16:32:19+08:00
 - 算法实现
 
   ```cpp
+  // 对区间[left, right]内的元素进行快速排序
   void QuickSort(vector<int>& nums, int left, int right) {
       if (left >= right)
-  				return;
-      int pivot_index = Partition(nums, left, right);  // 划分
-      // 分别对两个子表进行递归排序
-      QuickSort(nums, left, pivot_index - 1);
-      QuickSort(nums, pivot_index + 1, right);
+          return;
+      int pivot_idx = Partition(nums, left, right);       // 进行一次划分
+      QuickSort(nums, left, pivot_idx - 1);       // 对左半部分进行快速排序
+      QuickSort(nums, pivot_idx + 1, right);      // 对右半部分进行快速排序
   }
   
+  // 对区间[left, right]内的元素进行划分，返回枢轴下标
   int Partition(vector<int>& nums, int left, int right) {
-      int pivot = nums[left];  // 将第一个元素作为枢轴
-      while (left < right) {    // 循环跳出条件
-          // 将小于枢轴的元素移动到左边
+      int pivot = nums[left]; // 选取首元素作为枢轴
+      while (left < right) {
+          // 从右往左扫描，将小于枢轴的元素放到左边
           while (left < right && nums[right] >= pivot)
               --right;
           nums[left] = nums[right];
-          // 将大于等于枢轴的元素移动到右边
+          // 从左往右扫描，将大于等于枢轴的元素放到右边
           while (left < right && nums[left] < pivot)
               ++left;
           nums[right] = nums[left];
       }
-      nums[left] = pivot;  // 将枢轴元素放到最终位置
+      nums[left] = pivot;     // 将枢轴放到最终位置上
       return left;
   }
   ```
@@ -299,37 +299,40 @@ date = 2024-02-26T16:32:19+08:00
 - 算法实现
 
   ```cpp
+  vector<int> tmp;
+  
+  // 对区间[left, right]内的元素进行归并排序
   void MergeSort(vector<int>& nums, int left, int right) {
       if (left >= right)
           return;
       int mid = left + (right - left) / 2;  // 从中间划分
-      MergeSort(nums, left, mid);       // 对左半部分进行归并排序
-      MergeSort(nums, mid + 1, right);  // 对右半部分进行归并排序
-      Merge(nums, left, mid, right);    // 归并
+      MergeSort(nums, left, mid);           // 对左半部分进行归并排序
+      MergeSort(nums, mid + 1, right);      // 对右半部分进行归并排序
+      Merge(nums, left, mid, right);  // 左半部分和右半部分各自有序，将二者归并
   }
   
-  // [left, mid]和[mid + 1, right]各自有序，将二者归并
+  // 区间[left, mid]和区间[mid + 1, right]各自有序，将二者归并
   void Merge(vector<int>& nums, int left, int mid, int right) {
-      // 将区间内nums的元素拷贝到temp中
-      vector<int> temp(nums.size(), 0);
-      copy(nums.begin() + left, nums.begin() + right + 1, temp.begin() + left);
+      // 对区间内的元素进行备份
+      tmp.resize(nums.size(), 0);
+      std::copy(nums.begin() + left, nums.begin() + right + 1,
+                tmp.begin() + left);
       // 三指针，依次取较小值
       int i = left;
       int j = mid + 1;
-      int k = left
+      int k = left;
       while (i <= mid && j <= right) {
-          if (temp[i] <= temp[j])
-              nums[k++] = temp[i++];
+          if (tmp[i] <= tmp[j])
+              nums[k++] = tmp[i++];
           else
-              nums[k++] = temp[j++];
+              nums[k++] = tmp[j++];
       }
       // 将较长有序表中剩余的元素依次取完
       while (i <= mid)
-          nums[k++] = temp[i++];
+          nums[k++] = tmp[i++];
       while (j <= right)
-          nums[k++] = temp[j++];
+          nums[k++] = tmp[j++];
   }
-  
   ```
   
 - 算法分析
