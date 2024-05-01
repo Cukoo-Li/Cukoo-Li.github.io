@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>快速排序和归并排序 | Cukoo&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="快速排序和归并排序是面试中常考的排序算法。
+本文首先简单介绍快速排序和归并排序的算法思想，然后分别给出两者在数组和链表两种数据结构中的算法实现（迭代法&#43;递归法）。
+快速排序 快速排序的算法思想是：在待排序表{1...n}中任取一个元素作为枢轴pivot，通过一趟排序将待排序表划分为独立的两部分{1...k-1}和{k&#43;1...n}，使得{1...k-1}中的所有元素小于枢轴pivot，{k&#43;1...n}中所有元素大于等于枢轴pivot，则枢轴pivot放在了其最终位置k上，这个过程称为一趟快速排序（或一次划分）。然后分别递归地对两个子表重复上述过程，直至子表内只有一个元素或为空为止，即所有元素都放在了其最终位置上。
+由此可见，快速排序本身就是一种基于递归的算法。算法实现的关键是要在单次递归逻辑中，将给定的待排序表划分成两部分。此外，我们还可以使用栈去模拟递归调用的过程。
+排序数组 递归法
+// 对区间[left, right]内的元素进行快速排序 void QuickSort(vector&lt;int&gt;&amp; nums, int left, int right) { if (left &gt;= right) return; int pivot_idx = Partition(nums, left, right); // 进行一次划分 QuickSort(nums, left, pivot_idx - 1); // 对左半部分进行快速排序 QuickSort(nums, pivot_idx &#43; 1, right); // 对右半部分进行快速排序 } // 对区间[left, right]内的元素进行划分，返回枢轴下标 int Partition(vector&lt;int&gt;&amp; nums, int left, int right) { int pivot = nums[left]; // 选取首元素作为枢轴 while (left &lt; right) { // 从右往左扫描，将小于枢轴的元素放到左边 while (left &lt; right &amp;&amp; nums[right] &gt;= pivot) --right; nums[left] = nums[right]; // 从左往右扫描，将大于等于枢轴的元素放到右边 while (left &lt; right &amp;&amp; nums[left] &lt; pivot) &#43;&#43;left; nums[right] = nums[left]; } nums[left] = pivot; // 将枢轴放到最终位置上 return left; } 迭代法">
+<meta name="author" content="Cukoo">
+<link rel="canonical" href="https://cukoohhh.cn/posts/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0f91388456292b8d5df36639357816452d5d8f3af6953af64a39ec0a8e2ca9c6.css" integrity="sha256-D5E4hFYpK41d82Y5NXgWRS1djzr2lTr2SjnsCo4sqcY=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://cukoohhh.cn/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://cukoohhh.cn/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://cukoohhh.cn/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://cukoohhh.cn/apple-touch-icon.png">
+<link rel="mask-icon" href="https://cukoohhh.cn/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript><meta property="og:title" content="快速排序和归并排序" />
+<meta property="og:description" content="快速排序和归并排序是面试中常考的排序算法。
+本文首先简单介绍快速排序和归并排序的算法思想，然后分别给出两者在数组和链表两种数据结构中的算法实现（迭代法&#43;递归法）。
+快速排序 快速排序的算法思想是：在待排序表{1...n}中任取一个元素作为枢轴pivot，通过一趟排序将待排序表划分为独立的两部分{1...k-1}和{k&#43;1...n}，使得{1...k-1}中的所有元素小于枢轴pivot，{k&#43;1...n}中所有元素大于等于枢轴pivot，则枢轴pivot放在了其最终位置k上，这个过程称为一趟快速排序（或一次划分）。然后分别递归地对两个子表重复上述过程，直至子表内只有一个元素或为空为止，即所有元素都放在了其最终位置上。
+由此可见，快速排序本身就是一种基于递归的算法。算法实现的关键是要在单次递归逻辑中，将给定的待排序表划分成两部分。此外，我们还可以使用栈去模拟递归调用的过程。
+排序数组 递归法
+// 对区间[left, right]内的元素进行快速排序 void QuickSort(vector&lt;int&gt;&amp; nums, int left, int right) { if (left &gt;= right) return; int pivot_idx = Partition(nums, left, right); // 进行一次划分 QuickSort(nums, left, pivot_idx - 1); // 对左半部分进行快速排序 QuickSort(nums, pivot_idx &#43; 1, right); // 对右半部分进行快速排序 } // 对区间[left, right]内的元素进行划分，返回枢轴下标 int Partition(vector&lt;int&gt;&amp; nums, int left, int right) { int pivot = nums[left]; // 选取首元素作为枢轴 while (left &lt; right) { // 从右往左扫描，将小于枢轴的元素放到左边 while (left &lt; right &amp;&amp; nums[right] &gt;= pivot) --right; nums[left] = nums[right]; // 从左往右扫描，将大于等于枢轴的元素放到右边 while (left &lt; right &amp;&amp; nums[left] &lt; pivot) &#43;&#43;left; nums[right] = nums[left]; } nums[left] = pivot; // 将枢轴放到最终位置上 return left; } 迭代法" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cukoohhh.cn/posts/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/" /><meta property="og:image" content="https://cukoohhh.cn/images/papermod-cover.png"/><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-04-30T22:07:45+08:00" />
+<meta property="article:modified_time" content="2024-04-30T22:07:45+08:00" />
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://cukoohhh.cn/images/papermod-cover.png"/>
+
+<meta name="twitter:title" content="快速排序和归并排序"/>
+<meta name="twitter:description" content="快速排序和归并排序是面试中常考的排序算法。
+本文首先简单介绍快速排序和归并排序的算法思想，然后分别给出两者在数组和链表两种数据结构中的算法实现（迭代法&#43;递归法）。
+快速排序 快速排序的算法思想是：在待排序表{1...n}中任取一个元素作为枢轴pivot，通过一趟排序将待排序表划分为独立的两部分{1...k-1}和{k&#43;1...n}，使得{1...k-1}中的所有元素小于枢轴pivot，{k&#43;1...n}中所有元素大于等于枢轴pivot，则枢轴pivot放在了其最终位置k上，这个过程称为一趟快速排序（或一次划分）。然后分别递归地对两个子表重复上述过程，直至子表内只有一个元素或为空为止，即所有元素都放在了其最终位置上。
+由此可见，快速排序本身就是一种基于递归的算法。算法实现的关键是要在单次递归逻辑中，将给定的待排序表划分成两部分。此外，我们还可以使用栈去模拟递归调用的过程。
+排序数组 递归法
+// 对区间[left, right]内的元素进行快速排序 void QuickSort(vector&lt;int&gt;&amp; nums, int left, int right) { if (left &gt;= right) return; int pivot_idx = Partition(nums, left, right); // 进行一次划分 QuickSort(nums, left, pivot_idx - 1); // 对左半部分进行快速排序 QuickSort(nums, pivot_idx &#43; 1, right); // 对右半部分进行快速排序 } // 对区间[left, right]内的元素进行划分，返回枢轴下标 int Partition(vector&lt;int&gt;&amp; nums, int left, int right) { int pivot = nums[left]; // 选取首元素作为枢轴 while (left &lt; right) { // 从右往左扫描，将小于枢轴的元素放到左边 while (left &lt; right &amp;&amp; nums[right] &gt;= pivot) --right; nums[left] = nums[right]; // 从左往右扫描，将大于等于枢轴的元素放到右边 while (left &lt; right &amp;&amp; nums[left] &lt; pivot) &#43;&#43;left; nums[right] = nums[left]; } nums[left] = pivot; // 将枢轴放到最终位置上 return left; } 迭代法"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "文章",
+      "item": "https://cukoohhh.cn/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "快速排序和归并排序",
+      "item": "https://cukoohhh.cn/posts/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "快速排序和归并排序",
+  "name": "快速排序和归并排序",
+  "description": "快速排序和归并排序是面试中常考的排序算法。\n本文首先简单介绍快速排序和归并排序的算法思想，然后分别给出两者在数组和链表两种数据结构中的算法实现（迭代法+递归法）。\n快速排序 快速排序的算法思想是：在待排序表{1...n}中任取一个元素作为枢轴pivot，通过一趟排序将待排序表划分为独立的两部分{1...k-1}和{k+1...n}，使得{1...k-1}中的所有元素小于枢轴pivot，{k+1...n}中所有元素大于等于枢轴pivot，则枢轴pivot放在了其最终位置k上，这个过程称为一趟快速排序（或一次划分）。然后分别递归地对两个子表重复上述过程，直至子表内只有一个元素或为空为止，即所有元素都放在了其最终位置上。\n由此可见，快速排序本身就是一种基于递归的算法。算法实现的关键是要在单次递归逻辑中，将给定的待排序表划分成两部分。此外，我们还可以使用栈去模拟递归调用的过程。\n排序数组 递归法\n// 对区间[left, right]内的元素进行快速排序 void QuickSort(vector\u0026lt;int\u0026gt;\u0026amp; nums, int left, int right) { if (left \u0026gt;= right) return; int pivot_idx = Partition(nums, left, right); // 进行一次划分 QuickSort(nums, left, pivot_idx - 1); // 对左半部分进行快速排序 QuickSort(nums, pivot_idx + 1, right); // 对右半部分进行快速排序 } // 对区间[left, right]内的元素进行划分，返回枢轴下标 int Partition(vector\u0026lt;int\u0026gt;\u0026amp; nums, int left, int right) { int pivot = nums[left]; // 选取首元素作为枢轴 while (left \u0026lt; right) { // 从右往左扫描，将小于枢轴的元素放到左边 while (left \u0026lt; right \u0026amp;\u0026amp; nums[right] \u0026gt;= pivot) --right; nums[left] = nums[right]; // 从左往右扫描，将大于等于枢轴的元素放到右边 while (left \u0026lt; right \u0026amp;\u0026amp; nums[left] \u0026lt; pivot) ++left; nums[right] = nums[left]; } nums[left] = pivot; // 将枢轴放到最终位置上 return left; } 迭代法",
+  "keywords": [
+    
+  ],
+  "articleBody": "快速排序和归并排序是面试中常考的排序算法。\n本文首先简单介绍快速排序和归并排序的算法思想，然后分别给出两者在数组和链表两种数据结构中的算法实现（迭代法+递归法）。\n快速排序 快速排序的算法思想是：在待排序表{1...n}中任取一个元素作为枢轴pivot，通过一趟排序将待排序表划分为独立的两部分{1...k-1}和{k+1...n}，使得{1...k-1}中的所有元素小于枢轴pivot，{k+1...n}中所有元素大于等于枢轴pivot，则枢轴pivot放在了其最终位置k上，这个过程称为一趟快速排序（或一次划分）。然后分别递归地对两个子表重复上述过程，直至子表内只有一个元素或为空为止，即所有元素都放在了其最终位置上。\n由此可见，快速排序本身就是一种基于递归的算法。算法实现的关键是要在单次递归逻辑中，将给定的待排序表划分成两部分。此外，我们还可以使用栈去模拟递归调用的过程。\n排序数组 递归法\n// 对区间[left, right]内的元素进行快速排序 void QuickSort(vector\u003cint\u003e\u0026 nums, int left, int right) { if (left \u003e= right) return; int pivot_idx = Partition(nums, left, right); // 进行一次划分 QuickSort(nums, left, pivot_idx - 1); // 对左半部分进行快速排序 QuickSort(nums, pivot_idx + 1, right); // 对右半部分进行快速排序 } // 对区间[left, right]内的元素进行划分，返回枢轴下标 int Partition(vector\u003cint\u003e\u0026 nums, int left, int right) { int pivot = nums[left]; // 选取首元素作为枢轴 while (left \u003c right) { // 从右往左扫描，将小于枢轴的元素放到左边 while (left \u003c right \u0026\u0026 nums[right] \u003e= pivot) --right; nums[left] = nums[right]; // 从左往右扫描，将大于等于枢轴的元素放到右边 while (left \u003c right \u0026\u0026 nums[left] \u003c pivot) ++left; nums[right] = nums[left]; } nums[left] = pivot; // 将枢轴放到最终位置上 return left; } 迭代法\n// 对区间[left, right]内的元素进行快速排序 void QuickSort(vector\u003cint\u003e\u0026 nums, int left, int right) { if (left \u003e= right) return; stack\u003cpair\u003cint, int\u003e\u003e sta; // 用栈存储区间范围，用于调用Partition sta.push({left, right}); while (!sta.empty()) { // 获取当前区间范围 auto interval = sta.top(); sta.pop(); int pivot_idx = Partition(nums, interval.first, interval.second); // 将左半部分区间范围入栈 if (interval.first \u003c pivot_idx - 1) sta.push({interval.first, pivot_idx - 1}); // 将右半部分区间范围入栈 if (pivot_idx + 1 \u003c interval.second) sta.push({pivot_idx + 1,interval.second}); } } // 对区间[left, right]内的元素进行划分，返回枢轴下标 int Partition(vector\u003cint\u003e\u0026 nums, int left, int right) { int pivot = nums[left]; // 选取首元素作为枢轴 while (left \u003c right) { // 从右往左扫描，将小于枢轴的元素放到左边 while (left \u003c right \u0026\u0026 nums[right] \u003e= pivot) --right; nums[left] = nums[right]; // 从左往右扫描，将大于等于枢轴的元素放到右边 while (left \u003c right \u0026\u0026 nums[left] \u003c pivot) ++left; nums[right] = nums[left]; } nums[left] = pivot; // 将枢轴放到最终位置上 return left; } 排序链表 递归法\nclass Solution { // 对区间(dummy_head, end)内的元素进行快速排序 void QuickSort(ListNode* dummy_head, ListNode* end) { if (dummy_head-\u003enext == end || dummy_head-\u003enext-\u003enext == end) return; ListNode* pivot = Partition(dummy_head, end); // 划分，确定枢轴 QuickSort(dummy_head, pivot); // 对左半部分进行快速排序 QuickSort(pivot, end); // 对右半部分进行快速排序 } // 对区间(dummy_head, end)内的元素进行划分，返回指向枢轴的指针 ListNode* Partition(ListNode* dummy_head, ListNode* end) { ListNode* pivot = dummy_head-\u003enext; // 选取首元素作为枢轴元素 ListNode* prev = pivot; // 遍历链表，将小于枢轴的元素插入到链表头 while (prev-\u003enext != end) { if (prev-\u003enext-\u003eval \u003c pivot-\u003eval) { ListNode* node = prev-\u003enext; prev-\u003enext = prev-\u003enext-\u003enext; ListNode* tmp = dummy_head-\u003enext; dummy_head-\u003enext = node; node-\u003enext = tmp; } else prev = prev-\u003enext; } return pivot; } public: ListNode* sortList(ListNode* head) { ListNode* dummy_head = new ListNode(0, head); QuickSort(dummy_head, nullptr); head = dummy_head-\u003enext; delete dummy_head; return head; } }; 迭代法\nclass Solution { // 对区间(dummy_head, end)内的元素进行快速排序 void QuickSort(ListNode* dummy_head, ListNode* end) { if (dummy_head-\u003enext == end || dummy_head-\u003enext-\u003enext == end) return; stack\u003cpair\u003cListNode*, ListNode*\u003e\u003e sta; // 用栈存储区间范围，用于调用Partition sta.push({dummy_head, end}); while (!sta.empty()) { // 获取当前区间范围 auto interval = sta.top(); sta.pop(); ListNode* pivot = Partition(interval.first, interval.second); // 将左半部分区间范围入栈 if (interval.first-\u003enext != pivot \u0026\u0026 interval.first-\u003enext-\u003enext != pivot) sta.push({interval.first, pivot}); // 将右半部分区间范围入栈 if (pivot-\u003enext != interval.second \u0026\u0026 pivot-\u003enext-\u003enext != interval.second) sta.push({pivot, interval.second}); } } // 对区间(dummy_head, end)内的元素进行划分，返回指向枢轴的指针 ListNode* Partition(ListNode* dummy_head, ListNode* end) { ListNode* pivot = dummy_head-\u003enext; // 选取首元素作为枢轴元素 ListNode* prev = pivot; // 遍历链表，将小于枢轴的元素插入到链表头 while (prev-\u003enext != end) { if (prev-\u003enext-\u003eval \u003c pivot-\u003eval) { ListNode* node = prev-\u003enext; prev-\u003enext = prev-\u003enext-\u003enext; ListNode* tmp = dummy_head-\u003enext; dummy_head-\u003enext = node; node-\u003enext = tmp; } else prev = prev-\u003enext; } return pivot; } public: ListNode* sortList(ListNode* head) { ListNode* dummy_head = new ListNode(0, head); QuickSort(dummy_head, nullptr); head = dummy_head-\u003enext; delete dummy_head; return head; } }; 归并排序 归并排序的思想是：初始时，将待排序表视为n个只含1个元素的有序子表，然后两两归并，合并成一个更大的有序表，直到合并成一个长度为n的有序表为止。\n由此可见，归并排序的思想非常简洁，关键是一开始要找出只含1个元素的有序子表，然后慢慢生成更长的有序表。这个过程可以使用递归法自顶向下地实现，也可以使用迭代法自底向上地实现。\n排序数组 递归法\nvector\u003cint\u003e tmp; // 对区间[left, right]内的元素进行归并排序 void MergeSort(vector\u003cint\u003e\u0026 nums, int left, int right) { if (left \u003e= right) return; int mid = left + (right - left) / 2; // 从中间划分 MergeSort(nums, left, mid); // 对左半部分进行归并排序 MergeSort(nums, mid + 1, right); // 对右半部分进行归并排序 Merge(nums, left, mid, right); // 左半部分和右半部分各自有序，将二者归并 } // 区间[left, mid]和区间[mid + 1, right]各自有序，将二者归并 void Merge(vector\u003cint\u003e\u0026 nums, int left, int mid, int right) { // 对区间内的元素进行备份 tmp.resize(nums.size(), 0); std::copy(nums.begin() + left, nums.begin() + right + 1, tmp.begin() + left); // 三指针，依次取较小值 int i = left; int j = mid + 1; int k = left; while (i \u003c= mid \u0026\u0026 j \u003c= right) { if (tmp[i] \u003c= tmp[j]) nums[k++] = tmp[i++]; else nums[k++] = tmp[j++]; } // 将较长有序表中剩余的元素依次取完 while (i \u003c= mid) nums[k++] = tmp[i++]; while (j \u003c= right) nums[k++] = tmp[j++]; } 迭代法\nvector\u003cint\u003e tmp; // 对区间[left, right]内的元素进行归并排序 void MergeSort(vector\u003cint\u003e\u0026 nums) { if (left \u003e= right) return; // 从步长d为1开始归并，每趟翻倍 for (int d = 1; d \u003c nums.size(); d *= 2) { int cur = 0; // 每次归并的起点 while (cur \u003c nums.size()) { // 确定将要归并的两个区间边界 int left = cur; int mid = cur + d - 1; int right = std::min(static_cast\u003cint\u003e(nums.size() - 1), mid + d); if (mid \u003c right) Merge(nums, left, mid, right); cur = right + 1; } } } // [left, mid]和[mid + 1, right]各自有序，将二者归并 void Merge(vector\u003cint\u003e\u0026 nums, int left, int mid, int right) { // 对区间内的元素进行备份 tmp.resize(nums.size(), 0); std::copy(nums.begin() + left, nums.begin() + right + 1, tmp.begin() + left); // 三指针，依次取较小值 int i = left; int j = mid + 1; int k = left; while (i \u003c= mid \u0026\u0026 j \u003c= right) { if (tmp[i] \u003c= tmp[j]) nums[k++] = tmp[i++]; else nums[k++] = tmp[j++]; } // 将较长有序表中剩余的元素依次取完 while (i \u003c= mid) nums[k++] = tmp[i++]; while (j \u003c= right) nums[k++] = tmp[j++]; } 排序链表 递归法\nclass Solution { // 对链表head进行归并排序 ListNode* MergeSort(ListNode* head) { if (!head || !head-\u003enext) return head; // 将链表对半切开 ListNode* slow = head; ListNode* fast = head; while (fast-\u003enext \u0026\u0026 fast-\u003enext-\u003enext) { slow = slow-\u003enext; fast = fast-\u003enext-\u003enext; } ListNode* left = head; ListNode* right = slow-\u003enext; slow-\u003enext = nullptr; // 对左半部分和右半部分分别进行归并排序 left = MergeSort(left); right = MergeSort(right); // 归并 return Merge(left, right); } // 链表left和right各自有序，将二者归并 ListNode* Merge(ListNode* left, ListNode* right) { ListNode* dummy_head = new ListNode(0); ListNode* cur = dummy_head; while (left \u0026\u0026 right) { if (left-\u003eval \u003c= right-\u003eval) { cur-\u003enext = left; left = left-\u003enext; } else { cur-\u003enext = right; right = right-\u003enext; } cur = cur-\u003enext; } cur-\u003enext = left ? left : right; ListNode* head = dummy_head-\u003enext; delete dummy_head; return head; } public: ListNode* sortList(ListNode* head) { return MergeSort(head); } }; 迭代法\nclass Solution { // 对链表head进行归并排序 ListNode* MergeSort(ListNode* head) { if (!head || !head-\u003enext) return head; // 计算链表长度 int length = 0; for (ListNode* cur = head; cur; cur = cur-\u003enext) ++length; // 创建虚拟头结点 ListNode* dummy_head = new ListNode(0, head); // 从步长d为1开始归并，每趟翻倍 for (int d = 1; d \u003c length; d *= 2) { ListNode* cur = dummy_head-\u003enext; ListNode* prev = dummy_head; // 用于连接归并结果 // 按步长d提取出左、右子链表 while (cur) { ListNode* left = cur; for (int i = 1; i \u003c d \u0026\u0026 cur-\u003enext; ++i) cur = cur-\u003enext; ListNode* right = cur-\u003enext; // 如果子链表right不存在，不用归并，直接连接子链表left if (!right) { prev-\u003enext = left; break; } cur-\u003enext = nullptr; cur = right; for (int i = 1; i \u003c d \u0026\u0026 cur-\u003enext; ++i) cur = cur-\u003enext; // 保存剩余的未归并的链表 ListNode* remain = cur-\u003enext; cur-\u003enext = nullptr; // 归并，并连接结果 prev-\u003enext = Merge(left, right); // 更新prev和cur while (prev-\u003enext) prev = prev-\u003enext; cur = remain; } } head = dummy_head-\u003enext; delete dummy_head; return head; } // 链表left和right各自有序，将二者归并 ListNode* Merge(ListNode* left, ListNode* right) { ListNode* dummy_head = new ListNode(0); ListNode* cur = dummy_head; while (left \u0026\u0026 right) { if (left-\u003eval \u003c= right-\u003eval) { cur-\u003enext = left; left = left-\u003enext; } else { cur-\u003enext = right; right = right-\u003enext; } cur = cur-\u003enext; } cur-\u003enext = left ? left : right; ListNode* head = dummy_head-\u003enext; delete dummy_head; return head; } public: ListNode* sortList(ListNode* head) { return MergeSort(head); } }; ",
+  "wordCount" : "1163",
+  "inLanguage": "zh",
+  "datePublished": "2024-04-30T22:07:45+08:00",
+  "dateModified": "2024-04-30T22:07:45+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Cukoo"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://cukoohhh.cn/posts/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cukoo's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://cukoohhh.cn/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://cukoohhh.cn/" accesskey="h" title="Cukoo&#39;s Blog (Alt + H)">Cukoo&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://cukoohhh.cn/posts" title="✍🏻文章">
+                    <span>✍🏻文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoohhh.cn/categories" title="🗃️分类">
+                    <span>🗃️分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoohhh.cn/about" title="ℹ️关于">
+                    <span>ℹ️关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://cukoohhh.cn/search" title="🔍搜索">
+                    <span>🔍搜索</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      快速排序和归并排序
+    </h1>
+    <div class="post-meta"><span title='2024-04-30 22:07:45 +0800 CST'>2024年4月30日</span>&nbsp;·&nbsp;Cukoo&nbsp;|&nbsp;<a href="https://github.com/Cukoo-Li/Cukoo-Li.github.io/tree/main/content/posts/%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f%e5%92%8c%e5%bd%92%e5%b9%b6%e6%8e%92%e5%ba%8f/index.zh.md" rel="noopener noreferrer" target="_blank">提交修改意见</a>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e5%bf%ab%e9%80%9f%e6%8e%92%e5%ba%8f" aria-label="快速排序">快速排序</a><ul>
+                        
+                <li>
+                    <a href="#%e6%8e%92%e5%ba%8f%e6%95%b0%e7%bb%84" aria-label="排序数组">排序数组</a></li>
+                <li>
+                    <a href="#%e6%8e%92%e5%ba%8f%e9%93%be%e8%a1%a8" aria-label="排序链表">排序链表</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%bd%92%e5%b9%b6%e6%8e%92%e5%ba%8f" aria-label="归并排序">归并排序</a><ul>
+                        
+                <li>
+                    <a href="#%e6%8e%92%e5%ba%8f%e6%95%b0%e7%bb%84-1" aria-label="排序数组">排序数组</a></li>
+                <li>
+                    <a href="#%e6%8e%92%e5%ba%8f%e9%93%be%e8%a1%a8-1" aria-label="排序链表">排序链表</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><p>快速排序和归并排序是面试中常考的排序算法。</p>
+<p>本文首先简单介绍快速排序和归并排序的算法思想，然后分别给出两者在数组和链表两种数据结构中的算法实现（迭代法+递归法）。</p>
+<h2 id="快速排序">快速排序<a hidden class="anchor" aria-hidden="true" href="#快速排序">#</a></h2>
+<p>快速排序的算法思想是：在待排序表<code>{1...n}</code>中任取一个元素作为枢轴<code>pivot</code>，通过一趟排序将待排序表划分为独立的两部分<code>{1...k-1}</code>和<code>{k+1...n}</code>，使得<code>{1...k-1}</code>中的所有元素小于枢轴<code>pivot</code>，<code>{k+1...n}</code>中所有元素大于等于枢轴<code>pivot</code>，则枢轴<code>pivot</code>放在了其最终位置<code>k</code>上，这个过程称为一趟快速排序（或一次划分）。然后分别递归地对两个子表重复上述过程，直至子表内只有一个元素或为空为止，即所有元素都放在了其最终位置上。</p>
+<p>由此可见，快速排序本身就是一种基于递归的算法。算法实现的关键是要在单次递归逻辑中，将给定的待排序表划分成两部分。此外，我们还可以使用栈去模拟递归调用的过程。</p>
+<h3 id="排序数组">排序数组<a hidden class="anchor" aria-hidden="true" href="#排序数组">#</a></h3>
+<ul>
+<li>
+<p>递归法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// 对区间[left, right]内的元素进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">QuickSort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">pivot_idx</span> <span class="o">=</span> <span class="n">Partition</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>       <span class="c1">// 进行一次划分
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">QuickSort</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">pivot_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>       <span class="c1">// 对左半部分进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">QuickSort</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">pivot_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>      <span class="c1">// 对右半部分进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 对区间[left, right]内的元素进行划分，返回枢轴下标
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="nf">Partition</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">];</span> <span class="c1">// 选取首元素作为枢轴
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 从右往左扫描，将小于枢轴的元素放到左边
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">pivot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">--</span><span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 从左往右扫描，将大于等于枢轴的元素放到右边
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">=</span> <span class="n">pivot</span><span class="p">;</span>     <span class="c1">// 将枢轴放到最终位置上
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
+<li>
+<p>迭代法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="c1">// 对区间[left, right]内的元素进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">QuickSort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stack</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">sta</span><span class="p">;</span>      <span class="c1">// 用栈存储区间范围，用于调用Partition
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">sta</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">sta</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 获取当前区间范围
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">auto</span> <span class="n">interval</span> <span class="o">=</span> <span class="n">sta</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sta</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">pivot_idx</span> <span class="o">=</span> <span class="n">Partition</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">interval</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">interval</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将左半部分区间范围入栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">interval</span><span class="p">.</span><span class="n">first</span> <span class="o">&lt;</span> <span class="n">pivot_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sta</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">interval</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">pivot_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将右半部分区间范围入栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">pivot_idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">interval</span><span class="p">.</span><span class="n">second</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sta</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">pivot_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span><span class="n">interval</span><span class="p">.</span><span class="n">second</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 对区间[left, right]内的元素进行划分，返回枢轴下标
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">int</span> <span class="nf">Partition</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">];</span> <span class="c1">// 选取首元素作为枢轴
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 从右往左扫描，将小于枢轴的元素放到左边
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">pivot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">--</span><span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 从左往右扫描，将大于等于枢轴的元素放到右边
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">right</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">nums</span><span class="p">[</span><span class="n">left</span><span class="p">]</span> <span class="o">=</span> <span class="n">pivot</span><span class="p">;</span>     <span class="c1">// 将枢轴放到最终位置上
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="排序链表">排序链表<a hidden class="anchor" aria-hidden="true" href="#排序链表">#</a></h3>
+<ul>
+<li>
+<p>递归法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对区间(dummy_head, end)内的元素进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">QuickSort</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">==</span> <span class="n">end</span> <span class="o">||</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">==</span> <span class="n">end</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">Partition</span><span class="p">(</span><span class="n">dummy_head</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span> <span class="c1">// 划分，确定枢轴
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">QuickSort</span><span class="p">(</span><span class="n">dummy_head</span><span class="p">,</span> <span class="n">pivot</span><span class="p">);</span> <span class="c1">// 对左半部分进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">QuickSort</span><span class="p">(</span><span class="n">pivot</span><span class="p">,</span> <span class="n">end</span><span class="p">);</span>        <span class="c1">// 对右半部分进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对区间(dummy_head, end)内的元素进行划分，返回指向枢轴的指针
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">ListNode</span><span class="o">*</span> <span class="nf">Partition</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span> <span class="c1">// 选取首元素作为枢轴元素
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ListNode</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="n">pivot</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 遍历链表，将小于枢轴的元素插入到链表头
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ListNode</span><span class="o">*</span> <span class="n">node</span> <span class="o">=</span> <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ListNode</span><span class="o">*</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">node</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                <span class="n">prev</span> <span class="o">=</span> <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">pivot</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ListNode</span><span class="o">*</span> <span class="n">sortList</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">QuickSort</span><span class="p">(</span><span class="n">dummy_head</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">head</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">delete</span> <span class="n">dummy_head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div></li>
+<li>
+<p>迭代法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对区间(dummy_head, end)内的元素进行快速排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">void</span> <span class="nf">QuickSort</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">==</span> <span class="n">end</span> <span class="o">||</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">==</span> <span class="n">end</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stack</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">ListNode</span><span class="o">*</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*&gt;&gt;</span> <span class="n">sta</span><span class="p">;</span> <span class="c1">// 用栈存储区间范围，用于调用Partition
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">sta</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">dummy_head</span><span class="p">,</span> <span class="n">end</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">sta</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 获取当前区间范围
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">auto</span> <span class="n">interval</span> <span class="o">=</span> <span class="n">sta</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">sta</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ListNode</span><span class="o">*</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">Partition</span><span class="p">(</span><span class="n">interval</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">interval</span><span class="p">.</span><span class="n">second</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 将左半部分区间范围入栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="n">interval</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="n">pivot</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">interval</span><span class="p">.</span><span class="n">first</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="n">pivot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sta</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">interval</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">pivot</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 将右半部分区间范围入栈
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">if</span> <span class="p">(</span><span class="n">pivot</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="n">interval</span><span class="p">.</span><span class="n">second</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">pivot</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="n">interval</span><span class="p">.</span><span class="n">second</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sta</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">pivot</span><span class="p">,</span> <span class="n">interval</span><span class="p">.</span><span class="n">second</span><span class="p">});</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对区间(dummy_head, end)内的元素进行划分，返回指向枢轴的指针
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">ListNode</span><span class="o">*</span> <span class="nf">Partition</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span> <span class="c1">// 选取首元素作为枢轴元素
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ListNode</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="n">pivot</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 遍历链表，将小于枢轴的元素插入到链表头
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">!=</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ListNode</span><span class="o">*</span> <span class="n">node</span> <span class="o">=</span> <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ListNode</span><span class="o">*</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">node</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">node</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span>
+</span></span><span class="line"><span class="cl">                <span class="n">prev</span> <span class="o">=</span> <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">pivot</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ListNode</span><span class="o">*</span> <span class="n">sortList</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">QuickSort</span><span class="p">(</span><span class="n">dummy_head</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">head</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">delete</span> <span class="n">dummy_head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div></li>
+</ul>
+<h2 id="归并排序">归并排序<a hidden class="anchor" aria-hidden="true" href="#归并排序">#</a></h2>
+<p>归并排序的思想是：初始时，将待排序表视为<code>n</code>个只含<code>1</code>个元素的有序子表，然后两两归并，合并成一个更大的有序表，直到合并成一个长度为<code>n</code>的有序表为止。</p>
+<p>由此可见，归并排序的思想非常简洁，关键是一开始要找出只含<code>1</code>个元素的有序子表，然后慢慢生成更长的有序表。这个过程可以使用递归法自顶向下地实现，也可以使用迭代法自底向上地实现。</p>
+<h3 id="排序数组-1">排序数组<a hidden class="anchor" aria-hidden="true" href="#排序数组-1">#</a></h3>
+<ul>
+<li>
+<p>递归法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 对区间[left, right]内的元素进行归并排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">MergeSort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>  <span class="c1">// 从中间划分
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">MergeSort</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">mid</span><span class="p">);</span>           <span class="c1">// 对左半部分进行归并排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">MergeSort</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>      <span class="c1">// 对右半部分进行归并排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">Merge</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>  <span class="c1">// 左半部分和右半部分各自有序，将二者归并
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 区间[left, mid]和区间[mid + 1, right]各自有序，将二者归并
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">Merge</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对区间内的元素进行备份
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">tmp</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">left</span><span class="p">,</span> <span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="n">tmp</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">left</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 三指针，依次取较小值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">mid</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 将较长有序表中剩余的元素依次取完
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">mid</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
+<li>
+<p>迭代法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 对区间[left, right]内的元素进行归并排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">MergeSort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">left</span> <span class="o">&gt;=</span> <span class="n">right</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 从步长d为1开始归并，每趟翻倍
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">d</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kt">int</span> <span class="n">cur</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>  <span class="c1">// 每次归并的起点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">while</span> <span class="p">(</span><span class="n">cur</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="c1">// 确定将要归并的两个区间边界
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="n">cur</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">cur</span> <span class="o">+</span> <span class="n">d</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">mid</span> <span class="o">+</span> <span class="n">d</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">mid</span> <span class="o">&lt;</span> <span class="n">right</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">Merge</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">mid</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="n">cur</span> <span class="o">=</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// [left, mid]和[mid + 1, right]各自有序，将二者归并
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">Merge</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">left</span><span class="p">,</span> <span class="kt">int</span> <span class="n">mid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对区间内的元素进行备份
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">tmp</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">copy</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">left</span><span class="p">,</span> <span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">right</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">              <span class="n">tmp</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">left</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 三指针，依次取较小值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">mid</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">        <span class="k">else</span>
+</span></span><span class="line"><span class="cl">            <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 将较长有序表中剩余的元素依次取完
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;=</span> <span class="n">mid</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">j</span><span class="o">++</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="排序链表-1">排序链表<a hidden class="anchor" aria-hidden="true" href="#排序链表-1">#</a></h3>
+<ul>
+<li>
+<p>递归法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对链表head进行归并排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">ListNode</span><span class="o">*</span> <span class="nf">MergeSort</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span> <span class="o">||</span> <span class="o">!</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 将链表对半切开
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ListNode</span><span class="o">*</span> <span class="n">slow</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">fast</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">fast</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">&amp;&amp;</span> <span class="n">fast</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">slow</span> <span class="o">=</span> <span class="n">slow</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">fast</span> <span class="o">=</span> <span class="n">fast</span><span class="o">-&gt;</span><span class="n">next</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">left</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">right</span> <span class="o">=</span> <span class="n">slow</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">slow</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 对左半部分和右半部分分别进行归并排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">left</span> <span class="o">=</span> <span class="n">MergeSort</span><span class="p">(</span><span class="n">left</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">right</span> <span class="o">=</span> <span class="n">MergeSort</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 归并
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">return</span> <span class="n">Merge</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 链表left和right各自有序，将二者归并
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">ListNode</span><span class="o">*</span> <span class="nf">Merge</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">left</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&amp;&amp;</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">left</span> <span class="o">?</span> <span class="nl">left</span> <span class="p">:</span> <span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">delete</span> <span class="n">dummy_head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ListNode</span><span class="o">*</span> <span class="n">sortList</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nf">MergeSort</span><span class="p">(</span><span class="n">head</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div></li>
+<li>
+<p>迭代法</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 对链表head进行归并排序
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">ListNode</span><span class="o">*</span> <span class="nf">MergeSort</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">head</span> <span class="o">||</span> <span class="o">!</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 计算链表长度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">head</span><span class="p">;</span> <span class="n">cur</span><span class="p">;</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="n">length</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 创建虚拟头结点
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">head</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 从步长d为1开始归并，每趟翻倍
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">;</span> <span class="n">d</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ListNode</span><span class="o">*</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ListNode</span><span class="o">*</span> <span class="n">prev</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="p">;</span> <span class="c1">// 用于连接归并结果
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="c1">// 按步长d提取出左、右子链表
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">while</span> <span class="p">(</span><span class="n">cur</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ListNode</span><span class="o">*</span> <span class="n">left</span> <span class="o">=</span> <span class="n">cur</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">d</span> <span class="o">&amp;&amp;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ListNode</span><span class="o">*</span> <span class="n">right</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// 如果子链表right不存在，不用归并，直接连接子链表left
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="p">}</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span> <span class="o">=</span> <span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">d</span> <span class="o">&amp;&amp;</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// 保存剩余的未归并的链表
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">ListNode</span><span class="o">*</span> <span class="n">remain</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// 归并，并连接结果
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">Merge</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="c1">// 更新prev和cur
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                <span class="k">while</span> <span class="p">(</span><span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">prev</span> <span class="o">=</span> <span class="n">prev</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span> <span class="o">=</span> <span class="n">remain</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">head</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">delete</span> <span class="n">dummy_head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 链表left和right各自有序，将二者归并
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">ListNode</span><span class="o">*</span> <span class="nf">Merge</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">left</span><span class="p">,</span> <span class="n">ListNode</span><span class="o">*</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">dummy_head</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListNode</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">cur</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="p">(</span><span class="n">left</span> <span class="o">&amp;&amp;</span> <span class="n">right</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="n">left</span><span class="o">-&gt;</span><span class="n">val</span> <span class="o">&lt;=</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">left</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">left</span> <span class="o">=</span> <span class="n">left</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">right</span> <span class="o">=</span> <span class="n">right</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">cur</span> <span class="o">=</span> <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cur</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">left</span> <span class="o">?</span> <span class="nl">left</span> <span class="p">:</span> <span class="n">right</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span> <span class="o">=</span> <span class="n">dummy_head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">delete</span> <span class="n">dummy_head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">head</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">public</span><span class="o">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ListNode</span><span class="o">*</span> <span class="n">sortList</span><span class="p">(</span><span class="n">ListNode</span><span class="o">*</span> <span class="n">head</span><span class="p">)</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nf">MergeSort</span><span class="p">(</span><span class="n">head</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">};</span>
+</span></span></code></pre></div></li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2024 <a href="https://cukoohhh.cn/">Cukoo&#39;s Blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = '复制';
+
+        function copyingDone() {
+            copybutton.innerHTML = '已复制！';
+            setTimeout(() => {
+                copybutton.innerHTML = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+
+<script type="text/javascript" async
+    src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\[\[', '\]\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                TeX: {
+                    equationNumbers: { autoNumber: "AMS" },
+                    extensions: ["AMSmath.js", "AMSsymbols.js"]
+                }
+            }
+        });
+
+        MathJax.Hub.Queue(function () {
+            
+            
+            
+            var all = MathJax.Hub.getAllJax(), i;
+            for (i = 0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+<style>
+    code.has-jax {
+        font: inherit;
+        font-size: 100%;
+        background: inherit;
+        border: inherit;
+        color: #515151;
+    }
+</style></body>
+
+</html>

@@ -1,7 +1,6 @@
 +++
 title = '快速排序和归并排序'
 date = 2024-04-30T22:07:45+08:00
-draft = true
 
 +++
 
@@ -243,7 +242,7 @@ draft = true
   void MergeSort(vector<int>& nums) {
       if (left >= right)
           return;
-      // 从步长为1开始归并，每趟翻倍
+      // 从步长d为1开始归并，每趟翻倍
       for (int d = 1; d < nums.size(); d *= 2) {
           int cur = 0;  // 每次归并的起点
           while (cur < nums.size()) {
@@ -287,12 +286,127 @@ draft = true
 - 递归法
 
   ```cpp
+  class Solution {
+      // 对链表head进行归并排序
+      ListNode* MergeSort(ListNode* head) {
+          if (!head || !head->next)
+              return head;
+          // 将链表对半切开
+          ListNode* slow = head;
+          ListNode* fast = head;
+          while (fast->next && fast->next->next) {
+              slow = slow->next;
+              fast = fast->next->next;
+          }
+          ListNode* left = head;
+          ListNode* right = slow->next;
+          slow->next = nullptr;
+          // 对左半部分和右半部分分别进行归并排序
+          left = MergeSort(left);
+          right = MergeSort(right);
+          // 归并
+          return Merge(left, right);
+      }
   
+      // 链表left和right各自有序，将二者归并
+      ListNode* Merge(ListNode* left, ListNode* right) {
+          ListNode* dummy_head = new ListNode(0);
+          ListNode* cur = dummy_head;
+          while (left && right) {
+              if (left->val <= right->val) {
+                  cur->next = left;
+                  left = left->next;
+              } else {
+                  cur->next = right;
+                  right = right->next;
+              }
+              cur = cur->next;
+          }
+          cur->next = left ? left : right;
+          ListNode* head = dummy_head->next;
+          delete dummy_head;
+          return head;
+      }
+  public:
+      ListNode* sortList(ListNode* head) {
+          return MergeSort(head);
+      }
+  };
   ```
 
 - 迭代法
 
   ```cpp
+  class Solution {
+      // 对链表head进行归并排序
+      ListNode* MergeSort(ListNode* head) {
+          if (!head || !head->next)
+              return head;
+          // 计算链表长度
+          int length = 0;
+          for (ListNode* cur = head; cur; cur = cur->next)
+              ++length;
+          // 创建虚拟头结点
+          ListNode* dummy_head = new ListNode(0, head);
+          // 从步长d为1开始归并，每趟翻倍
+          for (int d = 1; d < length; d *= 2) {
+              ListNode* cur = dummy_head->next;
+              ListNode* prev = dummy_head; // 用于连接归并结果
+              // 按步长d提取出左、右子链表
+              while (cur) {
+                  ListNode* left = cur;
+                  for (int i = 1; i < d && cur->next; ++i)
+                      cur = cur->next;
+                  ListNode* right = cur->next;
+                  // 如果子链表right不存在，不用归并，直接连接子链表left
+                  if (!right) {
+                      prev->next = left;
+                      break;
+                  }
+                  cur->next = nullptr;
+                  cur = right;
+                  for (int i = 1; i < d && cur->next; ++i)
+                      cur = cur->next;
+                  // 保存剩余的未归并的链表
+                  ListNode* remain = cur->next;
+                  cur->next = nullptr;
+                  // 归并，并连接结果
+                  prev->next = Merge(left, right);
+                  // 更新prev和cur
+                  while (prev->next)
+                      prev = prev->next;
+                  cur = remain;
+              }
+          }
+          head = dummy_head->next;
+          delete dummy_head;
+          return head;
+      }
+      // 链表left和right各自有序，将二者归并
+      ListNode* Merge(ListNode* left, ListNode* right) {
+          ListNode* dummy_head = new ListNode(0);
+          ListNode* cur = dummy_head;
+          while (left && right) {
+              if (left->val <= right->val) {
+                  cur->next = left;
+                  left = left->next;
+              } else {
+                  cur->next = right;
+                  right = right->next;
+              }
+              cur = cur->next;
+          }
+          cur->next = left ? left : right;
+          ListNode* head = dummy_head->next;
+          delete dummy_head;
+          return head;
+      }
+  
+  public:
+      ListNode* sortList(ListNode* head) { 
+          return MergeSort(head); 
+      }
+  };
   ```
-
+  
   

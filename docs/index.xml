@@ -11,8 +11,20 @@
     </image>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 29 Mar 2024 19:39:32 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 30 Apr 2024 22:07:45 +0800</lastBuildDate>
     <atom:link href="https://cukoohhh.cn/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>快速排序和归并排序</title>
+      <link>https://cukoohhh.cn/posts/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/</link>
+      <pubDate>Tue, 30 Apr 2024 22:07:45 +0800</pubDate>
+      <guid>https://cukoohhh.cn/posts/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E5%92%8C%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/</guid>
+      <description>快速排序和归并排序是面试中常考的排序算法。
+本文首先简单介绍快速排序和归并排序的算法思想，然后分别给出两者在数组和链表两种数据结构中的算法实现（迭代法+递归法）。
+快速排序 快速排序的算法思想是：在待排序表{1...n}中任取一个元素作为枢轴pivot，通过一趟排序将待排序表划分为独立的两部分{1...k-1}和{k+1...n}，使得{1...k-1}中的所有元素小于枢轴pivot，{k+1...n}中所有元素大于等于枢轴pivot，则枢轴pivot放在了其最终位置k上，这个过程称为一趟快速排序（或一次划分）。然后分别递归地对两个子表重复上述过程，直至子表内只有一个元素或为空为止，即所有元素都放在了其最终位置上。
+由此可见，快速排序本身就是一种基于递归的算法。算法实现的关键是要在单次递归逻辑中，将给定的待排序表划分成两部分。此外，我们还可以使用栈去模拟递归调用的过程。
+排序数组 递归法
+// 对区间[left, right]内的元素进行快速排序 void QuickSort(vector&amp;lt;int&amp;gt;&amp;amp; nums, int left, int right) { if (left &amp;gt;= right) return; int pivot_idx = Partition(nums, left, right); // 进行一次划分 QuickSort(nums, left, pivot_idx - 1); // 对左半部分进行快速排序 QuickSort(nums, pivot_idx + 1, right); // 对右半部分进行快速排序 } // 对区间[left, right]内的元素进行划分，返回枢轴下标 int Partition(vector&amp;lt;int&amp;gt;&amp;amp; nums, int left, int right) { int pivot = nums[left]; // 选取首元素作为枢轴 while (left &amp;lt; right) { // 从右往左扫描，将小于枢轴的元素放到左边 while (left &amp;lt; right &amp;amp;&amp;amp; nums[right] &amp;gt;= pivot) --right; nums[left] = nums[right]; // 从左往右扫描，将大于等于枢轴的元素放到右边 while (left &amp;lt; right &amp;amp;&amp;amp; nums[left] &amp;lt; pivot) ++left; nums[right] = nums[left]; } nums[left] = pivot; // 将枢轴放到最终位置上 return left; } 迭代法</description>
+    </item>
     <item>
       <title>KMP算法</title>
       <link>https://cukoohhh.cn/posts/kmp%E7%AE%97%E6%B3%95/</link>
