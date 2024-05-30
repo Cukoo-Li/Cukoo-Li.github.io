@@ -11,8 +11,8 @@ autoSwitchAppearance = true
 
 defaultThemeColor = "#FFFFFF"
 
-enableSearch = false
-enableCodeCopy = false
+enableSearch = true
+enableCodeCopy = true
 enableImageLazyLoading = true
 enableImageWebp = true
 
@@ -32,7 +32,7 @@ fingerprintAlgorithm = "sha256"
   showScrollToTop = true
 
 [homepage]
-  layout = "page" # valid options: page, profile, custom
+  layout = "profile" # valid options: page, profile, custom
   showRecent = false
   recentLimit = 5
 
@@ -41,17 +41,17 @@ fingerprintAlgorithm = "sha256"
   showDateUpdated = false
   showAuthor = true
   showBreadcrumbs = false
-  showDraftLabel = true
+  showDraftLabel = false
   showEdit = false
-  # editURL = "https://github.com/username/repo/"
+  editURL = "https://github.com/Cukoo-Li/Cukoo-Li.github.io/tree/main/content"
   editAppendPath = true
   showHeadingAnchors = true
-  showPagination = true
+  showPagination = false
   invertPagination = false
-  showReadingTime = true
-  showTableOfContents = false
-  showTaxonomies = false
-  showWordCount = false
+  showReadingTime = false
+  showTableOfContents = true
+  showTaxonomies = true
+  showWordCount = true
   showComments = false
   # sharingLinks = ["facebook", "x-twitter", "mastodon", "pinterest", "reddit", "linkedin", "email", "threads", "telegram", "line", "weibo"]
 

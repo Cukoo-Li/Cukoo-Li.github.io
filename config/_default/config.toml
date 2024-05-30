@@ -5,7 +5,7 @@
 theme = "congo"
 publishDir = "docs"
 baseURL = "https://cukoohhh.cn/"
-defaultContentLanguage = "zh"
+defaultContentLanguage = "zh-cn"
 
 enableRobotsTXT = true
 paginate = 10
