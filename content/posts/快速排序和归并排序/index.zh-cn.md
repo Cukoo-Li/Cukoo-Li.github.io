@@ -52,7 +52,7 @@ date: 2024-04-30
   void QuickSort(vector<int>& nums, int left, int right) {
       if (left >= right)
           return;
-      stack<pair<int, int>> sta;      // 用栈存储区间范围，用于调用Partition
+      stack<pair<int, int>> sta;      // 用栈存储区间范围，用于调用 Partition
       sta.push({left, right});
       while (!sta.empty()) {
           // 获取当前区间范围
@@ -138,7 +138,7 @@ date: 2024-04-30
       void QuickSort(ListNode* dummy_head, ListNode* end) {
           if (dummy_head->next == end || dummy_head->next->next == end)
               return;
-          stack<pair<ListNode*, ListNode*>> sta; // 用栈存储区间范围，用于调用Partition
+          stack<pair<ListNode*, ListNode*>> sta; // 用栈存储区间范围，用于调用 Partition
           sta.push({dummy_head, end});
           while (!sta.empty()) {
               // 获取当前区间范围
@@ -241,7 +241,7 @@ date: 2024-04-30
   void MergeSort(vector<int>& nums) {
       if (left >= right)
           return;
-      // 从步长d为1开始归并，每趟翻倍
+      // 从步长 d 为 1 开始归并，每趟翻倍
       for (int d = 1; d < nums.size(); d *= 2) {
           int cur = 0;  // 每次归并的起点
           while (cur < nums.size()) {
@@ -286,7 +286,7 @@ date: 2024-04-30
 
   ```cpp
   class Solution {
-      // 对链表head进行归并排序
+      // 对链表 head 进行归并排序
       ListNode* MergeSort(ListNode* head) {
           if (!head || !head->next)
               return head;
@@ -307,7 +307,7 @@ date: 2024-04-30
           return Merge(left, right);
       }
   
-      // 链表left和right各自有序，将二者归并
+      // 链表 left 和 right 各自有序，将二者归并
       ListNode* Merge(ListNode* left, ListNode* right) {
           ListNode* dummy_head = new ListNode(0);
           ListNode* cur = dummy_head;
@@ -337,7 +337,7 @@ date: 2024-04-30
 
   ```cpp
   class Solution {
-      // 对链表head进行归并排序
+      // 对链表 head 进行归并排序
       ListNode* MergeSort(ListNode* head) {
           if (!head || !head->next)
               return head;
@@ -347,17 +347,17 @@ date: 2024-04-30
               ++length;
           // 创建虚拟头结点
           ListNode* dummy_head = new ListNode(0, head);
-          // 从步长d为1开始归并，每趟翻倍
+          // 从步长 d 为 1 开始归并，每趟翻倍
           for (int d = 1; d < length; d *= 2) {
               ListNode* cur = dummy_head->next;
               ListNode* prev = dummy_head; // 用于连接归并结果
-              // 按步长d提取出左、右子链表
+              // 按步长 d 提取出左、右子链表
               while (cur) {
                   ListNode* left = cur;
                   for (int i = 1; i < d && cur->next; ++i)
                       cur = cur->next;
                   ListNode* right = cur->next;
-                  // 如果子链表right不存在，不用归并，直接连接子链表left
+                  // 如果子链表 right 不存在，不用归并，直接连接子链表 left
                   if (!right) {
                       prev->next = left;
                       break;
@@ -371,7 +371,7 @@ date: 2024-04-30
                   cur->next = nullptr;
                   // 归并，并连接结果
                   prev->next = Merge(left, right);
-                  // 更新prev和cur
+                  // 更新 prev 和 cur
                   while (prev->next)
                       prev = prev->next;
                   cur = remain;
@@ -381,7 +381,7 @@ date: 2024-04-30
           delete dummy_head;
           return head;
       }
-      // 链表left和right各自有序，将二者归并
+      // 链表 left 和 right 各自有序，将二者归并
       ListNode* Merge(ListNode* left, ListNode* right) {
           ListNode* dummy_head = new ListNode(0);
           ListNode* cur = dummy_head;
