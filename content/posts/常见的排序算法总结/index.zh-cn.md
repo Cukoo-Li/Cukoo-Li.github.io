@@ -240,44 +240,31 @@ date: 2024-02-26T16:32:19+08:00
 
   ```cpp
   void HeapSort(vector<int>& nums) {
-      // 将待排序表转换为以数组形式存储的完全二叉树（根结点下标为 1）
-      nums.resize(nums.size() + 1);
-      for (int i = nums.size() - 1; i > 0; --i)
-          nums[i] = nums[i - 1];
-      // 堆排序
       BuildMaxHeap(nums);                          // 初始建堆
-      for (int i = nums.size() - 1; i > 1; i--) {  // n-1 趟交换和调整
-          swap(nums[i], nums[1]);
-          HeadAdjust(nums, 1, i);
+      for (int i = nums.size() - 1; i > 0; i--) {  // n-1 趟交换和调整
+          swap(nums[i], nums[0]);
+          HeadAdjust(nums, 0, i);
       }
-      // 复原待排序表
-      for (int i = 0; i < nums.size() - 1; ++i)
-          nums[i] = nums[i + 1];
-      nums.resize(nums.size() - 1);
   }
   
   void BuildMaxHeap(vector<int>& nums) {
-      for (int i = nums.size() / 2; i > 0; --i)
+      for (int i = nums.size() / 2 - 1; i >= 0; --i)
           HeadAdjust(nums, i, nums.size());
   }
   
-  // 以 k 为根结点的树仅在根结点位置不满足大根堆性质
-  // 对根结点 k 的位置进行调整
-  // 该过程可形象地描述为“小元素不断下坠”
-  void HeadAdjust(vector<int>& nums, int k, int end) {
-      nums[0] = nums[k];  // nums[0]用于暂存根结点的值
-      // 寻找适合放置根结点的位置 k
-      for (int i = 2 * k; i < end; i *= 2) {
-          if (i + 1 < end && nums[i] < nums[i + 1])
-              ++i;
-          if (nums[0] >= nums[i])  // 如果将根结点放到位置 k，是否符合大根堆的性质
+  // 以 i 为根结点的树仅在根结点位置不满足大根堆性质
+  // 对根结点 i 的位置进行调整
+  // 该过程可形象地描述为“根结点不断下坠”
+  void HeadAdjust(vector<int>& nums, int i, int end) {
+      // 将 nums[i] 的位置逐步向下调整，直至以它为根的子树符合大根堆性质为止
+      for (int j = 2 * i + 1; j < end; j = j * 2 + 1) {
+          if (j < end - 1 && nums[j + 1] > nums[j])
+              ++j;
+          if (nums[i] >= nums[j])
               break;
-          else {
-              nums[k] = nums[i];
-              k = i;
-          }
+          std::swap(nums[i], nums[j]);
+          i = j;
       }
-      nums[k] = nums[0];  // 将根结点放到位置 k
   }
   ```
 

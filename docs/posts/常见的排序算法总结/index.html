@@ -63,8 +63,8 @@
       defer
       type="text/javascript"
       id="script-bundle"
-      src="/js/main.bundle.min.f29ffdffd9ab4cc95250c3c7196b2d5dae8ee6ef0a4139451073f90183ae7e31.js"
-      integrity="sha256-8p/9/9mrTMlSUMPHGWstXa6O5u8KQTlFEHP5AYOufjE="
+      src="/js/main.bundle.min.9abdfbcc9a5d4d9ed7b5d31ceb05c0294430ec07b1dfec07809754d561269294.js"
+      integrity="sha256-mr37zJpdTZ7XtdMc6wXAKUQw7Aex3&#43;wHgJdU1WEmkpQ="
       data-copy="复制"
       data-copied="已复制"
     ></script>
@@ -96,16 +96,20 @@
   
   
   
-  <meta property="og:title" content="常见的排序算法总结" />
-<meta property="og:description" content="以下是我对常见的内部排序算法的简单总结，仅供自己复习之用，不涉及详细的算法讲解。" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://cukoohhh.cn/posts/%E5%B8%B8%E8%A7%81%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-02-26T16:32:19+08:00" />
-<meta property="article:modified_time" content="2024-02-26T16:32:19+08:00" />
+  <meta property="og:url" content="https://cukoohhh.cn/posts/%E5%B8%B8%E8%A7%81%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/">
+  <meta property="og:site_name" content="Cukoo&#39;s Blog">
+  <meta property="og:title" content="常见的排序算法总结">
+  <meta property="og:description" content="以下是我对常见的内部排序算法的简单总结，仅供自己复习之用，不涉及详细的算法讲解。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-02-26T16:32:19+08:00">
+    <meta property="article:modified_time" content="2024-02-26T16:32:19+08:00">
 
-
-  <meta name="twitter:card" content="summary"/><meta name="twitter:title" content="常见的排序算法总结"/>
-<meta name="twitter:description" content="以下是我对常见的内部排序算法的简单总结，仅供自己复习之用，不涉及详细的算法讲解。"/>
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="常见的排序算法总结">
+  <meta name="twitter:description" content="以下是我对常见的内部排序算法的简单总结，仅供自己复习之用，不涉及详细的算法讲解。">
 
   
   <script type="application/ld+json">
@@ -132,7 +136,7 @@
     
     
     "mainEntityOfPage": "true",
-    "wordCount": "850"
+    "wordCount": "796"
   }
   </script>
 
@@ -161,6 +165,9 @@
   
   
   
+  
+
+
 
 
   
@@ -202,7 +209,7 @@
               
                 <a
                   href="/posts/"
-                  title="文章"
+                  title=""
                   
                   ><span
                       class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
@@ -218,7 +225,7 @@
               
                 <a
                   href="/categories/"
-                  title="分类"
+                  title=""
                   
                   ><span
                       class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
@@ -234,7 +241,7 @@
               
                 <a
                   href="/about/"
-                  title="关于"
+                  title=""
                   
                   ><span
                       class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
@@ -358,7 +365,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2024-02-26 16:32:19 &#43;0800 CST">2024-02-26</time><span class="px-2 text-primary-500">&middot;</span><span>850 字</span>
+      <time datetime="2024-02-26 16:32:19 &#43;0800 CST">2024-02-26</time><span class="px-2 text-primary-500">&middot;</span><span>796 字</span>
     
 
     
@@ -653,45 +660,32 @@
 </li>
 </ul>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">HeapSort</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 将待排序表转换为以数组形式存储的完全二叉树（根结点下标为 1）
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">nums</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 堆排序
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">BuildMaxHeap</span><span class="p">(</span><span class="n">nums</span><span class="p">);</span>                          <span class="c1">// 初始建堆
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// n-1 趟交换和调整
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">HeadAdjust</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BuildMaxHeap</span><span class="p">(</span><span class="n">nums</span><span class="p">);</span>                          <span class="c1">// 初始建堆
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// n-1 趟交换和调整
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">HeadAdjust</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 复原待排序表
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
-</span></span><span class="line"><span class="cl">    <span class="n">nums</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">void</span> <span class="nf">BuildMaxHeap</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="n">HeadAdjust</span><span class="p">(</span><span class="n">nums</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// 以 k 为根结点的树仅在根结点位置不满足大根堆性质
-</span></span></span><span class="line"><span class="cl"><span class="c1">// 对根结点 k 的位置进行调整
-</span></span></span><span class="line"><span class="cl"><span class="c1">// 该过程可形象地描述为“小元素不断下坠”
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">HeadAdjust</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="kt">int</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>  <span class="c1">// nums[0]用于暂存根结点的值
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="c1">// 寻找适合放置根结点的位置 k
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">i</span> <span class="o">*=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">end</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="n">i</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1">// 如果将根结点放到位置 k，是否符合大根堆的性质
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>            <span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">else</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-</span></span><span class="line"><span class="cl">            <span class="n">k</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// 以 i 为根结点的树仅在根结点位置不满足大根堆性质
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 对根结点 i 的位置进行调整
+</span></span></span><span class="line"><span class="cl"><span class="c1">// 该过程可形象地描述为“根结点不断下坠”
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">void</span> <span class="nf">HeadAdjust</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// 将 nums[i] 的位置逐步向下调整，直至以它为根的子树符合大根堆性质为止
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">;</span> <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="n">end</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="n">j</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">i</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">nums</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">nums</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>  <span class="c1">// 将根结点放到位置 k
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div></li>
 <li>
 <p>算法分析</p>
@@ -758,7 +752,7 @@
 <p>算法思想</p>
 <p>假设元素的关键字可拆分为 d 个位（或称“组”），每个关键字位可能取得有限的 r 个值，按照关键字位权重递增的次序，做 d 趟“分配”和“收集”，这个过程中需要建立 r 个队列。</p>
 <ul>
-<li>分配：顺序扫描各个元素，若当前处理的关键字位为 x，则将其插入到队列 Q~x~中</li>
+<li>分配：顺序扫描各个元素，若当前处理的关键字位为 x，则将其插入到队列 Q<del>x</del>中</li>
 <li>收集：令各个队列中的元素依次出队并链接</li>
 </ul>
 </li>
