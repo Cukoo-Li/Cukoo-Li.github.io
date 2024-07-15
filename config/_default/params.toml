@@ -19,14 +19,14 @@ disableImageOptimization = false
 disableTextInHeader = false
 
 defaultBackgroundImage = "/img/background.svg"
-defaultFeaturedImage = "/img/featured.svg"
+# defaultFeaturedImage = "/img/featured.svg"
 
 highlightCurrentMenuArea = true
 smartTOC = true
-smartTOCHideUnfocusedChildren = false
+smartTOCHideUnfocusedChildren = true
 
 [header]
-  layout = "basic" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur
+  layout = "fixed" # valid options: basic, fixed, fixed-fill, fixed-gradient, fixed-fill-blur
 
 [footer]
   showMenu = true
@@ -136,11 +136,11 @@ smartTOCHideUnfocusedChildren = false
   # dataDomains = "yoursite.com,yoursite2.com"
 
 [buymeacoffee]
-  identifier = "nunocoracao"
-  globalWidget = false
-  globalWidgetMessage = ""
-  globalWidgetColor = "#FFDD00"
-  globalWidgetPosition = "Right"
+#   identifier = ""
+#   globalWidget = true
+#   globalWidgetMessage = ""
+#   globalWidgetColor = "#FFDD00"
+#   globalWidgetPosition = "Right"
 
 [verification]
   # google = ""

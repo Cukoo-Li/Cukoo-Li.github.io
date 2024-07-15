@@ -121,15 +121,6 @@
   
   
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-PEDMYR1V0K"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-PEDMYR1V0K');
-</script>
-
 
   
   
@@ -146,20 +137,12 @@
   </div>
   
   
-  <div style="padding-left:0;padding-right:0;padding-top:2px;padding-bottom:3px"
+  <div class="min-h-[148px]"></div>
+<div class="fixed inset-x-0 pl-[24px] pr-[24px]" style="z-index:100">
+  <div id="menu-blur" class="absolute opacity-0 inset-x-0 top-0 h-full single_hero_background nozoom backdrop-blur-2xl shadow-2xl"></div>
+  <div class="relative max-w-[64rem] ml-auto mr-auto">
+    <div style="padding-left:0;padding-right:0;padding-top:2px;padding-bottom:3px"
     class="main-menu flex items-center justify-between px-4 py-6 sm:px-6 md:justify-start space-x-3">
-    
-    
-    
-    <div>
-        <a href="/" class="flex">
-            <span class="sr-only">Cukoo&rsquo;s Blog</span>
-
-            <img src="/img/blowfish_logo_transparent.png" width="1000" height="1000"
-                class="logo max-h-[5rem] max-w-[5rem] object-scale-down object-left nozoom" alt="Cukoo&#39;s Blog" />
-
-        </a>
-    </div>
     
     <div class="flex flex-1 items-center justify-between">
         <nav class="flex space-x-3">
@@ -406,6 +389,16 @@
     })();
 </script>
 
+
+  </div>
+</div>
+<script>
+  window.addEventListener('scroll', function (e) {
+    var scroll = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    var background_blur = document.getElementById('menu-blur');
+    background_blur.style.opacity = (scroll / 300);
+  });
+</script>
 
   
   <div class="relative flex flex-col grow">
