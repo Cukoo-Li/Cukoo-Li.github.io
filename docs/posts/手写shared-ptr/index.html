@@ -103,7 +103,7 @@
     
     
     "mainEntityOfPage": "true",
-    "wordCount": "510"
+    "wordCount": "546"
   }]
   </script>
 
@@ -886,7 +886,7 @@
 
 
         <div class="article-content max-w-prose mb-20">
-          <p>手写<code>shared_ptr</code>是面试的常考点，提前准备一下吧。</p>
+          <p>手写 <code>shared_ptr</code> 是面试的常考点，提前准备一下吧。</p>
 
 
 <h2 class="relative group">shared_ptr 的关键特性 
@@ -899,11 +899,11 @@
     </span>        
     
 </h2>
-<p>首先明确<code>shared_ptr</code>的关键特性：</p>
+<p>首先明确 <code>shared_ptr</code> 的关键特性：</p>
 <ul>
-<li>允许多个<code>shared_ptr</code>指向同一个对象</li>
-<li>每个<code>shared_ptr</code>都有一个关联的引用计数，用于记录总共有多少个<code>shared_ptr</code>指向相同的对象</li>
-<li>一旦一个<code>shared_ptr</code>所关联的引用计数变为 0，它就会自动释放自己所管理的对象</li>
+<li>允许多个 <code>shared_ptr</code> 指向同一个对象</li>
+<li>每个 <code>shared_ptr</code> 都有一个关联的引用计数，用于记录总共有多少个 <code>shared_ptr</code> 指向相同的对象</li>
+<li>一旦一个 <code>shared_ptr</code> 所关联的引用计数变为 0，它就会自动释放自己所管理的对象</li>
 </ul>
 
 
@@ -920,7 +920,7 @@
 <p>显然，最关键的就是要实现引用计数这个机制，大致思路如下：</p>
 <ul>
 <li>在堆中创建一个整型对象作为引用计数</li>
-<li>在拷贝或赋值时修改引用计数</li>
+<li>在拷贝时递增引用计数</li>
 <li>在析构函数中递减引用计数，并考察它是否变为 0，如果变为 0，则释放所指向的对象以及引用计数对象</li>
 </ul>
 
@@ -935,34 +935,69 @@
     </span>        
     
 </h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cpp" data-lang="cpp"><span class="line"><span class="cl"><span class="cp">#pragma once
 </span></span></span><span class="line"><span class="cl"><span class="cp"></span>
 </span></span><span class="line"><span class="cl"><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
-</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">TinySharedPtr</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SharedPtr</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">   <span class="k">public</span><span class="o">:</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">// 构造函数
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">explicit</span> <span class="n">TinySharedPtr</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="o">:</span> <span class="n">ptr_</span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">explicit</span> <span class="n">SharedPtr</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">ptr</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="o">:</span> <span class="n">ptr_</span><span class="p">(</span><span class="n">ptr</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">ptr_</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="n">count_</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 拷贝构造函数
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">TinySharedPtr</span><span class="p">(</span><span class="k">const</span> <span class="n">TinySharedPtr</span><span class="o">&amp;</span> <span class="n">other</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="o">:</span> <span class="n">ptr_</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">ptr_</span><span class="p">),</span> <span class="n">count_</span><span class="p">(</span><span class="n">other</span><span class="p">.</span><span class="n">count_</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="o">++*</span><span class="n">count_</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">// 拷贝赋值运算符
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">TinySharedPtr</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">TinySharedPtr</span> <span class="n">other</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">ptr_</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">ptr_</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">count_</span><span class="p">,</span> <span class="n">other</span><span class="p">.</span><span class="n">count_</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">// 析构函数
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">~</span><span class="n">TinySharedPtr</span><span class="p">()</span> <span class="p">{</span>
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="o">~</span><span class="n">SharedPtr</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span> <span class="o">&amp;&amp;</span> <span class="o">--</span><span class="p">(</span><span class="o">*</span><span class="n">count_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">ptr_</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">count_</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 拷贝构造函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">SharedPtr</span><span class="p">(</span><span class="k">const</span> <span class="n">SharedPtr</span><span class="o">&amp;</span> <span class="n">that</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ptr_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">ptr_</span><span class="p">;</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">count_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="p">(</span><span class="o">*</span><span class="n">count_</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 移动构造函数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">SharedPtr</span><span class="p">(</span><span class="n">SharedPtr</span><span class="o">&amp;&amp;</span> <span class="n">that</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ptr_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">ptr_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">count_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">that</span><span class="p">.</span><span class="n">ptr_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">that</span><span class="p">.</span><span class="n">count_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 拷贝赋值运算符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">SharedPtr</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">SharedPtr</span><span class="o">&amp;</span> <span class="n">that</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">that</span> <span class="o">==</span> <span class="k">this</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span> <span class="o">&amp;&amp;</span> <span class="o">--</span><span class="p">(</span><span class="o">*</span><span class="n">count_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">ptr_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ptr_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">ptr_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">count_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="o">++</span><span class="p">(</span><span class="o">*</span><span class="n">count_</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 移动赋值运算符
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">SharedPtr</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">SharedPtr</span><span class="o">&amp;&amp;</span> <span class="n">that</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">that</span> <span class="o">==</span> <span class="k">this</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">count_</span> <span class="o">&amp;&amp;</span> <span class="o">--</span><span class="p">(</span><span class="o">*</span><span class="n">count_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">ptr_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">delete</span> <span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ptr_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">ptr_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">count_</span> <span class="o">=</span> <span class="n">that</span><span class="p">.</span><span class="n">count_</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">that</span><span class="p">.</span><span class="n">ptr_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">that</span><span class="p">.</span><span class="n">count_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">T</span><span class="o">*</span> <span class="nf">get</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ptr_</span><span class="p">;</span> <span class="p">}</span>
@@ -971,40 +1006,39 @@
 </span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">use_count</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">count_</span> <span class="o">?</span> <span class="o">*</span><span class="nl">count_</span> <span class="p">:</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">   <span class="k">private</span><span class="o">:</span>
-</span></span><span class="line"><span class="cl">    <span class="n">T</span><span class="o">*</span> <span class="n">ptr_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">int</span><span class="o">*</span> <span class="n">count_</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">T</span><span class="o">*</span> <span class="n">ptr_</span><span class="p">{};</span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span><span class="o">*</span> <span class="n">count_</span><span class="p">{};</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">Cukoo</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">Cukoo</span><span class="p">()</span> <span class="p">{</span> <span class="n">puts</span><span class="p">(</span><span class="s">&#34;Cukoo()&#34;</span><span class="p">);</span> <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">Cukoo</span><span class="p">()</span> <span class="p">{</span> <span class="n">puts</span><span class="p">(</span><span class="s">&#34;~Cukoo()&#34;</span><span class="p">);</span> <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">struct</span> <span class="nc">X</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">X</span><span class="p">()</span> <span class="p">{</span> <span class="n">puts</span><span class="p">(</span><span class="n">__PRETTY_FUNCTION__</span><span class="p">);</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">~</span><span class="n">X</span><span class="p">()</span> <span class="p">{</span> <span class="n">puts</span><span class="p">(</span><span class="n">__PRETTY_FUNCTION__</span><span class="p">);</span> <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">};</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">TinySharedPtr</span><span class="o">&lt;</span><span class="n">Cukoo</span><span class="o">&gt;</span> <span class="n">sp0</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp0: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp0</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">SharedPtr</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="n">sp1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;sp1.use_count = {}&#34;</span><span class="p">,</span> <span class="n">sp1</span><span class="p">.</span><span class="n">use_count</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">TinySharedPtr</span><span class="o">&lt;</span><span class="n">Cukoo</span><span class="o">&gt;</span> <span class="n">sp1</span><span class="p">(</span><span class="k">new</span> <span class="n">Cukoo</span><span class="p">());</span>
-</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;age: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp1</span><span class="o">-&gt;</span><span class="n">age</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp1: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp1</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">TinySharedPtr</span><span class="o">&lt;</span><span class="n">Cukoo</span><span class="o">&gt;</span> <span class="n">sp2</span><span class="p">(</span><span class="n">sp1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp2: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp2</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">sp0</span> <span class="o">=</span> <span class="n">sp2</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp0: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp2</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">SharedPtr</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="n">sp2</span><span class="p">(</span><span class="k">new</span> <span class="n">X</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;sp2.use_count = {}&#34;</span><span class="p">,</span> <span class="n">sp2</span><span class="p">.</span><span class="n">use_count</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">SharedPtr</span><span class="o">&lt;</span><span class="n">X</span><span class="o">&gt;</span> <span class="n">sp3</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">sp2</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;sp2.use_count = {}&#34;</span><span class="p">,</span> <span class="n">sp2</span><span class="p">.</span><span class="n">use_count</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;sp3.use_count = {}&#34;</span><span class="p">,</span> <span class="n">sp3</span><span class="p">.</span><span class="n">use_count</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sp1</span> <span class="o">=</span> <span class="n">sp3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;sp1.use_count = {}&#34;</span><span class="p">,</span> <span class="n">sp1</span><span class="p">.</span><span class="n">use_count</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;sp0: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">sp0</span><span class="p">.</span><span class="n">use_count</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">format</span><span class="p">(</span><span class="s">&#34;sp1.use_count = {}&#34;</span><span class="p">,</span> <span class="n">sp1</span><span class="p">.</span><span class="n">use_count</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="sc">&#39;\n&#39;</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1">// sp0: 0
-</span></span></span><span class="line"><span class="cl"><span class="c1">// Cukoo()
-</span></span></span><span class="line"><span class="cl"><span class="c1">// age: 24
-</span></span></span><span class="line"><span class="cl"><span class="c1">// sp1: 1
-</span></span></span><span class="line"><span class="cl"><span class="c1">// sp2: 2
-</span></span></span><span class="line"><span class="cl"><span class="c1">// sp0: 3
-</span></span></span><span class="line"><span class="cl"><span class="c1">// sp0: 1
-</span></span></span><span class="line"><span class="cl"><span class="c1">// ~Cukoo()
+</span></span><span class="line"><span class="cl"><span class="c1">// sp1.use_count = 0
+</span></span></span><span class="line"><span class="cl"><span class="c1">// X::X()
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp2.use_count = 1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp2.use_count = 0
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp3.use_count = 1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp1.use_count = 2
+</span></span></span><span class="line"><span class="cl"><span class="c1">// sp1.use_count = 1
+</span></span></span><span class="line"><span class="cl"><span class="c1">// X::~X()
 </span></span></span></code></pre></div>
         </div>
         
